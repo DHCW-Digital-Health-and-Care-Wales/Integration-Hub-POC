@@ -1,0 +1,34 @@
+name: integration-hub-poc
+services:
+  emulator:
+    container_name: "servicebus-emulator"
+    image: mcr.microsoft.com/azure-messaging/servicebus-emulator:latest
+    pull_policy: always
+    volumes:
+      - "${CONFIG_PATH}:/ServiceBus_Emulator/ConfigFiles/Config.json"
+    ports:
+      - "5672:5672"
+    environment:
+      SQL_SERVER: sqledge
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD}"
+      ACCEPT_EULA: ${ACCEPT_EULA}
+    depends_on:
+      - sqledge
+    networks:
+      integration-hub-poc:
+        aliases:
+          - "sb-emulator"
+  sqledge:
+        container_name: "sqledge"
+        image: "mcr.microsoft.com/azure-sql-edge:latest"
+        networks:
+          integration-hub-poc:
+            aliases:
+              - "sqledge"
+        environment:
+          ACCEPT_EULA: ${ACCEPT_EULA}
+          MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD}"
+
+networks:
+  integration-hub-poc:
+
