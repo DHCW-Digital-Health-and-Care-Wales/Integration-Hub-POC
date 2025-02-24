@@ -19,15 +19,21 @@ services:
         aliases:
           - "sb-emulator"
   sqledge:
-        container_name: "sqledge"
-        image: "mcr.microsoft.com/azure-sql-edge:latest"
-        networks:
-          integration-hub-poc:
-            aliases:
-              - "sqledge"
-        environment:
-          ACCEPT_EULA: ${ACCEPT_EULA}
-          MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD}"
+    container_name: "sqledge"
+    image: "mcr.microsoft.com/azure-sql-edge:latest"
+    networks:
+      integration-hub-poc:
+        aliases:
+          - "sqledge"
+    environment:
+      ACCEPT_EULA: ${ACCEPT_EULA}
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD}"
+  wpas-validator:
+    container_name: wpas-validator
+    build:
+      context: ../wpas-validator
+      dockerfile: ./Dockerfile
+    restart: always
 
 networks:
   integration-hub-poc:
