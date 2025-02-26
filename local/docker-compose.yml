@@ -34,6 +34,34 @@ services:
       context: ../wpas-validator
       dockerfile: ./Dockerfile
     restart: always
+  inbound-queue-listener:
+    container_name: inbound-queue-listener
+    build:
+      context: ../dev-asb-listener
+      dockerfile: ./Dockerfile
+    depends_on:
+      - emulator
+    networks:
+      integration-hub-poc:
+        aliases:
+          - "inbound-queue-listener"
+    environment:
+      CONNECTION_STRING: "${SB_CONNECTION_STRING}"
+      QUEUE_NAME: "${INBOUND_QUEUE_NAME}"
+  inbound-queue-producer:
+    container_name: inbound-queue-producer
+    build:
+      context: ../dev-asb-producer
+      dockerfile: ./Dockerfile
+    depends_on:
+      - emulator
+    networks:
+      integration-hub-poc:
+        aliases:
+          - "inbound-queue-producer"
+    environment:
+      CONNECTION_STRING: "${SB_CONNECTION_STRING}"
+      QUEUE_NAME: "${INBOUND_QUEUE_NAME}"
 
 networks:
   integration-hub-poc:
