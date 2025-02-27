@@ -6,7 +6,11 @@ import com.azure.messaging.servicebus.ServiceBusSenderClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class HelloWorldProducer {
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+public final class MessageProducer {
     /**
      * Logger.
      */
@@ -15,14 +19,14 @@ public final class HelloWorldProducer {
     /**
      * Queue configuration details.
      */
-    private final AsbConfig config;
+    private final AppConfig config;
 
     /**
      * Create producer for provided configuration.
-     * @param asbConfig queue configuration
+     * @param appConfig queue configuration
      */
-    public HelloWorldProducer(final AsbConfig asbConfig) {
-        this.config = asbConfig;
+    public MessageProducer(final AppConfig appConfig) {
+        this.config = appConfig;
     }
 
     /**
@@ -30,8 +34,27 @@ public final class HelloWorldProducer {
      */
     public void produce() {
         LOGGER.debug("Sending message");
-        sendMessage("Hello World!");
+        sendMessage(getMessage());
         LOGGER.debug("Message sent");
+    }
+
+    private String getMessage() {
+        if (null != config.message() && !config.message().isEmpty()) {
+            LOGGER.info("Sending provided message: {}", config.message());
+            return config.message();
+        } else if (null != config.fileName() && !config.fileName().isBlank()) {
+            LOGGER.info("Sending provided file: {}", config.fileName());
+            return readFile();
+        }
+        throw new RuntimeException("Message not provided");
+    }
+
+    private String readFile() {
+        try {
+            return Files.readString(Path.of(config.fileName()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void sendMessage(final String text) {
@@ -47,5 +70,7 @@ public final class HelloWorldProducer {
         senderClient.sendMessage(new ServiceBusMessage(text));
         LOGGER.info("Sent a single message to the queue: {}",
                 config.queueName());
+
+        senderClient.close();
     }
 }

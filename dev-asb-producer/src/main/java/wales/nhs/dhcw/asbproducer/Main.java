@@ -25,7 +25,7 @@ public final class Main {
      */
     public static void main(final String[] args) {
         LOGGER.info("Asb Producer - START");
-        var producer = new HelloWorldProducer(AsbConfig.readEnvConfig());
+        var producer = new MessageProducer(AppConfig.readEnvConfig());
         producer.produce();
         LOGGER.info("Asb Producer - END");
     }

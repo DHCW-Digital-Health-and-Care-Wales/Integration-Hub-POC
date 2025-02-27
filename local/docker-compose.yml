@@ -33,9 +33,11 @@ services:
     build:
       context: ../wpas-validator
       dockerfile: ./Dockerfile
-    restart: always
+#    restart: always
   inbound-queue-listener:
     container_name: inbound-queue-listener
+    profiles:
+      - do-not-start
     build:
       context: ../dev-asb-listener
       dockerfile: ./Dockerfile
@@ -50,6 +52,8 @@ services:
       QUEUE_NAME: "${INBOUND_QUEUE_NAME}"
   inbound-queue-producer:
     container_name: inbound-queue-producer
+    profiles:
+      - do-not-start
     build:
       context: ../dev-asb-producer
       dockerfile: ./Dockerfile
@@ -59,9 +63,12 @@ services:
       integration-hub-poc:
         aliases:
           - "inbound-queue-producer"
+    volumes:
+      - ./testdata:/testdata
     environment:
       CONNECTION_STRING: "${SB_CONNECTION_STRING}"
       QUEUE_NAME: "${INBOUND_QUEUE_NAME}"
+      FILENAME: "/testdata/test.xml"
 
 networks:
   integration-hub-poc:
