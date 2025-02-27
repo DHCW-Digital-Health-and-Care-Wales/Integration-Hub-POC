@@ -10,7 +10,8 @@
 - WSL Enablement (Only for Windows):
     - [Install Windows Subsystem for Linux (WSL) | Microsoft Learn](https://learn.microsoft.com/en-us/windows/wsl/install)
     - [Configure Docker to use WSL](https://docs.docker.com/desktop/wsl/#:~:text=Turn%20on%20Docker%20Desktop%20WSL%202%201%20Download,engine%20..%20...%206%20Select%20Apply%20%26%20Restart.)
-
+- Create a `.secrets` file in `local` folder and add:
+    - `MSSQL_SA_PASSWORD="<insert_a_strong_password>"`
     
 ### Windows
 
@@ -19,7 +20,8 @@ Before starting the stack, we need to allow execution of unsigned scripts. Run t
 `$>Start-Process powershell -Verb RunAs -ArgumentList 'Set-ExecutionPolicy Bypass –Scope CurrentUser’`
 
 ## Staring the stack
-After completing the prerequisites, you can proceed with the following command in the `/local` directory to run the POC locally:
+After completing the prerequisites, you need to run `mvn package` in the root directory to build all the JARs.
+After JARs have been built you can proceed with the following command in the `/local` directory to run the POC locally:
 
 `docker compose up -d`
 

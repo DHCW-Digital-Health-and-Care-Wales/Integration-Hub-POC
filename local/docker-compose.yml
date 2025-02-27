@@ -10,8 +10,9 @@ services:
       - "5672:5672"
     environment:
       SQL_SERVER: sqledge
-      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD}"
       ACCEPT_EULA: ${ACCEPT_EULA}
+    env_file:
+      - ./.secrets
     depends_on:
       - sqledge
     networks:
@@ -27,13 +28,22 @@ services:
           - "sqledge"
     environment:
       ACCEPT_EULA: ${ACCEPT_EULA}
-      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD}"
+    env_file:
+      - ./.secrets
   wpas-validator:
     container_name: wpas-validator
     build:
       context: ../wpas-validator
       dockerfile: ./Dockerfile
     restart: always
+    env_file:
+      - ../wpas-validator/.env
+    depends_on:
+      - emulator
+    networks:
+      integration-hub-poc:
+        aliases:
+          - "wpas-validator"
 
 networks:
   integration-hub-poc:
