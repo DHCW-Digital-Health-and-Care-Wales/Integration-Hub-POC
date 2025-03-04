@@ -49,7 +49,7 @@
         </dependency>
         <dependency>
             <groupId>ca.uhn.hapi</groupId>
-            <artifactId>hapi-structures-v251</artifactId>
+            <artifactId>hapi-structures-v231</artifactId>
             <version>2.2</version>
         </dependency>
         <dependency>
