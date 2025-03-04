@@ -11,6 +11,7 @@
 
     <modules>
         <module>wpas-validator</module>
+        <module>wpas-hl7-translator</module>
     </modules>
 
     <properties>
@@ -76,6 +77,10 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <configLocation>google_checks.xml</configLocation>
+                    <consoleOutput>true</consoleOutput>
+                </configuration>
             </plugin>
 
             <!-- PMD Plugin -->
