@@ -55,6 +55,21 @@ class WpasHl7TranslatorTest {
         this.assertMatchingExpectedMessage(expected, result);
     }
 
+    @Test
+    @Disabled
+    void WpasMpiMessage_Is_translatedToAdtA40() throws HL7Exception, JAXBException, SAXException {
+        // Arrange
+        var wpasXml = getTestFileStream("wpas-mpr-a39.xml");
+        var expected = getTestFileContent("wpas-adt_a40.hl7.xml");
+
+        // Act
+        var result = translator.translate(parser.parse(wpasXml));
+
+        // Assert
+        this.assertMessageTimeIsNow(result);
+        this.assertMatchingExpectedMessage(expected, result);
+    }
+
     private Reader getTestFileReader(String path) {
         return new InputStreamReader(getTestFileStream(path));
     }

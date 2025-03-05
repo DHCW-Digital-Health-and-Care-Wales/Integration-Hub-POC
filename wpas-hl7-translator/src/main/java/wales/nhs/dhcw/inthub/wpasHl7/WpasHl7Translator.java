@@ -3,6 +3,7 @@ package wales.nhs.dhcw.inthub.wpasHl7;
 import ca.uhn.hl7v2.model.AbstractMessage;
 import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v251.message.ADT_A05;
+import ca.uhn.hl7v2.model.v251.message.ADT_A39;
 import ca.uhn.hl7v2.model.v251.segment.MSH;
 import wales.nhs.dhcw.inthub.wpasHl7.xml.MAINDATA;
 
@@ -14,6 +15,7 @@ public class WpasHl7Translator {
     public static final String HL7_VERSION = "2.5.1";
 
     private DateTimeFormatter dateTimeFormatter;
+    private final A39Mapper mapper = new A39Mapper();
 
     public WpasHl7Translator() {
         this.dateTimeFormatter = DateTimeFormatter.ofPattern(DATETIME_FORMAT);
@@ -23,6 +25,8 @@ public class WpasHl7Translator {
         switch (wpasXml.getTRANSACTION().getMSGID()) {
             case "MPI":
                 return translateMpiToAdtA28(wpasXml.getTRANSACTION());
+            case "MPR":
+                return translateMpiToAdtA39(wpasXml.getTRANSACTION());
             default:
                 throw new RuntimeException("Unknown message type: " + wpasXml.getTRANSACTION().getMSGID());
         }
@@ -34,6 +38,11 @@ public class WpasHl7Translator {
         // TODO implement message mapping
 
         return a28;
+    }
+    private  AbstractMessage translateMpiToAdtA39(MAINDATA.TRANSACTION transaction) throws DataTypeException {
+        ADT_A39 adtMessage = mapper.ADT_A39Mapper(transaction);
+
+        return adtMessage;
     }
 
     private void buildMsh(MSH msh, MAINDATA.TRANSACTION transaction) throws DataTypeException {
