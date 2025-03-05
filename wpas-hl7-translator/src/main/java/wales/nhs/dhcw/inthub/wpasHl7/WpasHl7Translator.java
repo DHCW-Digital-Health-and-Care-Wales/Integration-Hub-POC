@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class WpasHl7Translator {
-    private static final String DATETIME_FORMAT = "yyyyMMddHHmmss";
+    public static final String DATETIME_FORMAT = "yyyyMMddHHmmss";
     public static final String HL7_VERSION = "2.5.1";
 
     private DateTimeFormatter dateTimeFormatter;
