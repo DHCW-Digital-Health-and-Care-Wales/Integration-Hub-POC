@@ -11,6 +11,8 @@
 
     <modules>
         <module>wpas-validator</module>
+        <module>dev-asb-listener</module>
+        <module>dev-asb-producer</module>
     </modules>
 
     <properties>

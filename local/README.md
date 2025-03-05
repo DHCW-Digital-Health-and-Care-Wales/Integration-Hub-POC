@@ -38,3 +38,24 @@ You can use the following connection string to connect to the Service Bus emulat
 To terminate the containers you can proceed with the following command in the `/local` directory:
 
 `docker compose down`
+
+## Testing selected component
+
+To test validation component manually use inbound-queue-producer and inbound-queue-listener containers.
+
+1. Start local stack 
+```sh
+docker compose up -d
+```
+2. Start inbound-queue-listener
+```sh
+docker compose up -d  inbound-queue-listener
+```
+4. Run inbound-queue-producer with default file ([./testdata/test.xml]):
+```sh
+docker compose run inbound-queue-producer ...
+``` 
+or with custom file :
+```sh
+docker compose run -e FILENAME="/testdata/custom.xml" inbound-queue-producer
+```
