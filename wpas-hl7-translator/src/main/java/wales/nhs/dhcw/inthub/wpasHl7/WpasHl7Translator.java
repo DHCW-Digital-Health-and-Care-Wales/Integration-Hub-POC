@@ -2,42 +2,56 @@ package wales.nhs.dhcw.inthub.wpasHl7;
 
 import ca.uhn.hl7v2.model.AbstractMessage;
 import ca.uhn.hl7v2.model.DataTypeException;
-import ca.uhn.hl7v2.model.v231.message.ADT_A40;
-import ca.uhn.hl7v2.model.v231.segment.MSH;
-import jakarta.xml.bind.JAXBException;
+import ca.uhn.hl7v2.model.v251.message.ADT_A05;
+import ca.uhn.hl7v2.model.v251.segment.MSH;
 import wales.nhs.dhcw.inthub.wpasHl7.xml.MAINDATA;
 
-import java.io.Reader;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class WpasHl7Translator {
-    WpasXmlParser xmlParser;
+    private static final String DATETIME_FORMAT = "yyyyMMddHHmmss";
+    public static final String HL7_VERSION = "2.5.1";
 
-    public WpasHl7Translator(WpasXmlParser xmlParser) {
-        this.xmlParser = xmlParser;
+    private DateTimeFormatter dateTimeFormatter;
+
+    public WpasHl7Translator() {
+        this.dateTimeFormatter = DateTimeFormatter.ofPattern(DATETIME_FORMAT);
     }
 
-    AbstractMessage translate(Reader xmlMessage) throws JAXBException, DataTypeException {
-        var message = xmlParser.parse(xmlMessage);
-        switch (message.getTRANSACTION().getMSGID()) {
+    AbstractMessage translate(MAINDATA wpasXml) throws DataTypeException {
+        switch (wpasXml.getTRANSACTION().getMSGID()) {
             case "MPI":
-                return translateMpiToAdt40(message);
+                return translateMpiToAdtA28(wpasXml.getTRANSACTION());
             default:
-                throw new RuntimeException("Unknown message type: " + message.getTRANSACTION().getMSGID());
+                throw new RuntimeException("Unknown message type: " + wpasXml.getTRANSACTION().getMSGID());
         }
     }
 
-    private AbstractMessage translateMpiToAdt40(MAINDATA message) throws DataTypeException {
-        var ad40 = new ADT_A40();
-        buildMsh(ad40.getMSH(), message.getTRANSACTION());
+    private AbstractMessage translateMpiToAdtA28(MAINDATA.TRANSACTION transaction) throws DataTypeException {
+        var a28 = new ADT_A05();
+        buildMsh(a28.getMSH(), transaction);
         // TODO implement message mapping
 
-        return ad40;
+        return a28;
     }
 
     private void buildMsh(MSH msh, MAINDATA.TRANSACTION transaction) throws DataTypeException {
-        msh.getFieldSeparator().setValue("|");
-        msh.getEncodingCharacters().setValue("^~\\&");
-        msh.getSendingApplication().getNamespaceID().setValue(transaction.getSYSTEMID());
-        msh.getSendingFacility().getNamespaceID().setValue(transaction.getDHACODE());
+        msh.getMsh1_FieldSeparator().setValue("|");
+        msh.getMsh2_EncodingCharacters().setValue("^~\\&");
+        msh.getMsh3_SendingApplication().getNamespaceID().setValue(transaction.getSYSTEMID());
+        msh.getMsh4_SendingFacility().getNamespaceID().setValue(transaction.getDHACODE());
+        msh.getMsh7_DateTimeOfMessage().getTs1_Time().setValue(getCurrentDatetime());
+        msh.getMsh9_MessageType().getMsg1_MessageCode().setValue("ADT");
+        msh.getMsh9_MessageType().getMsg2_TriggerEvent().setValue("A28");
+        msh.getMsh9_MessageType().getMsg3_MessageStructure().setValue("ADT_A05");
+        msh.getMsh10_MessageControlID().setValue(transaction.getSYSTEMID() + transaction.getTRANSACTIONID());
+        msh.getMsh11_ProcessingID().getPt1_ProcessingID().setValue("P");
+        msh.getMsh12_VersionID().getVersionID().setValue(HL7_VERSION);
+        msh.getMsh15_AcceptAcknowledgmentType().setValue("AL");
+    }
+
+    private String getCurrentDatetime() {
+        return LocalDateTime.now().format(dateTimeFormatter);
     }
 }

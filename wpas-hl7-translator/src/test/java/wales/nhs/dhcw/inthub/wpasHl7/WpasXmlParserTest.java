@@ -5,20 +5,19 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class WpasXmlParserTest {
 
-    public static final String VALID_XML_PATH = "wpas-mpi.xml";
+    public static final String WPAS_UTF8_PATH = "wpas-simple-mpi.xml";
+    public static final String WPAS_UTF16_PATH = "wpas-mpi.xml";
 
     @Test
-    void ParserReturnsParsedMessage() throws JAXBException, IOException {
+    void WpasUtf8XmlIsParsed() throws JAXBException, IOException {
         // Arrange
         var parser = new WpasXmlParser();
-        var xml = readTestFile(VALID_XML_PATH);
+        var xml = readTestFile(WPAS_UTF8_PATH);
 
         // Act
         var message = parser.parse(xml);
@@ -28,7 +27,21 @@ class WpasXmlParserTest {
         assertEquals("12345", message.getTRANSACTION().getTRANSACTIONID());
     }
 
-    private Reader readTestFile(String path) {
-        return new InputStreamReader(WpasXmlParserTest.class.getClassLoader().getResourceAsStream(path));
+    @Test
+    void WpasUtf16XmlIsParsed() throws JAXBException, IOException {
+        // Arrange
+        var parser = new WpasXmlParser();
+        var xml = readTestFile(WPAS_UTF16_PATH);
+
+        // Act
+        var message = parser.parse(xml);
+
+        // Assert
+        assertNotNull(message);
+        assertEquals("28038161", message.getTRANSACTION().getTRANSACTIONID());
+    }
+
+    private InputStream readTestFile(String path) {
+        return WpasXmlParserTest.class.getClassLoader().getResourceAsStream(path);
     }
 }

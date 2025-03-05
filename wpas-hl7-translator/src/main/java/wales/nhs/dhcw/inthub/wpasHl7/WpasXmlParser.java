@@ -5,7 +5,7 @@ import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import wales.nhs.dhcw.inthub.wpasHl7.xml.MAINDATA;
 
-import java.io.Reader;
+import java.io.InputStream;
 
 public class WpasXmlParser {
 
@@ -15,8 +15,8 @@ public class WpasXmlParser {
         context = JAXBContext.newInstance( MAINDATA.class );
     }
 
-    public MAINDATA parse(Reader xml) throws JAXBException {
+    public MAINDATA parse(InputStream xmlStream) throws JAXBException {
         Unmarshaller jaxbUnmarshaller = context.createUnmarshaller();
-        return (MAINDATA) jaxbUnmarshaller.unmarshal(xml);
+        return (MAINDATA) jaxbUnmarshaller.unmarshal(xmlStream);
     }
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns3:ADT_A05 xmlns:ns3="urn:hl7-org:v2xml" xmlns:ns1="http://PAS_Demographics" xmlns:ns4="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <ns3:MSH>
+        <ns3:MSH.1>|</ns3:MSH.1>
+        <ns3:MSH.2>^~\&amp;</ns3:MSH.2>
+        <ns3:MSH.3>
+            <ns3:HD.1>109</ns3:HD.1>
+        </ns3:MSH.3>
+        <ns3:MSH.4>
+            <ns3:HD.1>7A1</ns3:HD.1>
+        </ns3:MSH.4>
+        <ns3:MSH.5>
+            <ns3:HD.1>200</ns3:HD.1>
+        </ns3:MSH.5>
+        <ns3:MSH.6>
+            <ns3:HD.1>200</ns3:HD.1>
+        </ns3:MSH.6>
+        <ns3:MSH.7>
+            <ns3:TS.1>20250210112501</ns3:TS.1>
+        </ns3:MSH.7>
+        <ns3:MSH.9>
+            <ns3:MSG.1>ADT</ns3:MSG.1>
+            <ns3:MSG.2>A28</ns3:MSG.2>
+            <ns3:MSG.3>ADT_A05</ns3:MSG.3>
+        </ns3:MSH.9>
+        <ns3:MSH.10>10928038161</ns3:MSH.10>
+        <ns3:MSH.11>
+            <ns3:PT.1>P</ns3:PT.1>
+        </ns3:MSH.11>
+        <ns3:MSH.12>
+            <ns3:VID.1>2.5.1</ns3:VID.1>
+        </ns3:MSH.12>
+        <ns3:MSH.15>AL</ns3:MSH.15>
+    </ns3:MSH>
+</ns3:ADT_A05>

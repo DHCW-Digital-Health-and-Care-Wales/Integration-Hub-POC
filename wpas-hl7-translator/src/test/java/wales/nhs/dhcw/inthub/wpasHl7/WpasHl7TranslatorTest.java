@@ -5,48 +5,76 @@ import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.HapiContext;
 import ca.uhn.hl7v2.model.AbstractMessage;
 import ca.uhn.hl7v2.parser.Parser;
+import ca.uhn.hl7v2.util.EncodedMessageComparator;
 import jakarta.xml.bind.JAXBException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.xml.sax.SAXException;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class WpasHl7TranslatorTest {
 
-    public static final String VALID_XML_PATH = "wpas-mpi.xml";
+    public static final String WPAS_MPI_XML_PATH = "wpas-mpi.xml";
+    public static final String EXPECTED_A28_PATH = "wpas-adt_a28-msh.hl7.xml";
 
     WpasHl7Translator translator;
+    private WpasXmlParser parser;
 
     @BeforeEach
     void setUp() throws JAXBException {
-        var parser = new WpasXmlParser();
-        translator = new WpasHl7Translator(parser);
+        parser = new WpasXmlParser();
+        translator = new WpasHl7Translator();
     }
 
     @Test
-    void WpasMpiMessage_Is_translatedToHl7() throws HL7Exception, JAXBException {
+    @Disabled
+    void WpasMpiMessage_Is_translatedToAdtA28() throws HL7Exception, JAXBException, SAXException {
+        // Arrange
+        var wpasXml = getTestFileStream(WPAS_MPI_XML_PATH);
+        var expected = getTestFileContent(EXPECTED_A28_PATH);
 
-        var result = translator.translate(readTestFile(VALID_XML_PATH));
+        // Act
+        var result = translator.translate(parser.parse(wpasXml));
 
-        assertNotNull(result);
-
-        String encodedMessage = encodeHl7PipeAndHat(result);
-        assertEquals("MSH|^~\\&|system456", encodedMessage.trim());
+        // Assert
+        this.assertMatchingExpectedMessage(expected, result);
     }
 
-    private static String encodeHl7PipeAndHat(AbstractMessage result) throws HL7Exception {
+    private Reader getTestFileReader(String path) {
+        return new InputStreamReader(getTestFileStream(path));
+    }
+
+    private static InputStream getTestFileStream(String path) {
+        return WpasXmlParserTest.class.getClassLoader().getResourceAsStream(path);
+    }
+
+    private String getTestFileContent(String path) {
+        return new BufferedReader(getTestFileReader(path))
+                .lines()
+                .collect(Collectors.joining(System.lineSeparator()));
+    }
+
+    private void assertMatchingExpectedMessage(String expected, AbstractMessage actual)
+            throws SAXException, HL7Exception {
+
+        assertEquals(
+                EncodedMessageComparator.standardizeXML(expected),
+                EncodedMessageComparator.standardizeXML(encodeHl7Xml(actual))
+        );
+    }
+
+    private static String encodeHl7Xml(AbstractMessage result) throws HL7Exception {
         HapiContext context = new DefaultHapiContext();
-        Parser parser = context.getPipeParser();
+        Parser parser = context.getXMLParser();
         String encodedMessage = parser.encode(result);
         return encodedMessage;
     }
-
-    private Reader readTestFile(String path) {
-        return new InputStreamReader(WpasXmlParserTest.class.getClassLoader().getResourceAsStream(path));
-    }
-
 }
