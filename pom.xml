@@ -11,6 +11,7 @@
 
     <modules>
         <module>wpas-validator</module>
+        <module>wpas-hl7-translator</module>
     </modules>
 
     <properties>
@@ -32,6 +33,13 @@
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
                 <version>${junit-bom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-bom</artifactId>
+                <version>5.15.2</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -76,6 +84,10 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <configLocation>google_checks.xml</configLocation>
+                    <consoleOutput>true</consoleOutput>
+                </configuration>
             </plugin>
 
             <!-- PMD Plugin -->

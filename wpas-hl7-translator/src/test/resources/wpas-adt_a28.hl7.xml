@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns3:ADT_A05 xmlns:ns3="urn:hl7-org:v2xml" xmlns:ns1="http://PAS_Demographics" xmlns:ns4="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <ns3:MSH>
+        <ns3:MSH.1>|</ns3:MSH.1>
+        <ns3:MSH.2>^~\&amp;</ns3:MSH.2>
+        <ns3:MSH.3>
+            <ns3:HD.1>109</ns3:HD.1>
+        </ns3:MSH.3>
+        <ns3:MSH.4>
+            <ns3:HD.1>7A1</ns3:HD.1>
+        </ns3:MSH.4>
+        <ns3:MSH.5>
+            <ns3:HD.1>200</ns3:HD.1>
+        </ns3:MSH.5>
+        <ns3:MSH.6>
+            <ns3:HD.1>200</ns3:HD.1>
+        </ns3:MSH.6>
+        <ns3:MSH.7>
+            <ns3:TS.1>20250210112501</ns3:TS.1>
+        </ns3:MSH.7>
+        <ns3:MSH.9>
+            <ns3:MSG.1>ADT</ns3:MSG.1>
+            <ns3:MSG.2>A28</ns3:MSG.2>
+            <ns3:MSG.3>ADT_A05</ns3:MSG.3>
+        </ns3:MSH.9>
+        <ns3:MSH.10>10928038161</ns3:MSH.10>
+        <ns3:MSH.11>
+            <ns3:PT.1>P</ns3:PT.1>
+        </ns3:MSH.11>
+        <ns3:MSH.12>
+            <ns3:VID.1>2.5.1</ns3:VID.1>
+        </ns3:MSH.12>
+        <ns3:MSH.15>AL</ns3:MSH.15>
+    </ns3:MSH>
+    <ns3:EVN>
+        <ns3:EVN.2>
+            <ns3:TS.1>20250210112501</ns3:TS.1>
+        </ns3:EVN.2>
+        <ns3:EVN.5>
+            <ns3:XCN.1>FSA078103</ns3:XCN.1>
+        </ns3:EVN.5>
+        <ns3:EVN.6>
+            <ns3:TS.1>20250210112500</ns3:TS.1>
+        </ns3:EVN.6>
+    </ns3:EVN>
+    <ns3:PID>
+        <ns3:PID.1>1</ns3:PID.1>
+        <ns3:PID.3>
+            <ns3:CX.1 />
+            <ns3:CX.4>
+                <ns3:HD.1 />
+            </ns3:CX.4>
+            <ns3:CX.5 />
+        </ns3:PID.3>
+        <ns3:PID.3>
+            <ns3:CX.1>B3159251</ns3:CX.1>
+            <ns3:CX.4>
+                <ns3:HD.1>109</ns3:HD.1>
+            </ns3:CX.4>
+            <ns3:CX.5>PI</ns3:CX.5>
+        </ns3:PID.3>
+        <ns3:PID.5>
+            <ns3:XPN.1>
+                <ns3:FN.1>JONES</ns3:FN.1>
+            </ns3:XPN.1>
+            <ns3:XPN.2>GRACIE</ns3:XPN.2>
+            <ns3:XPN.3 />
+            <ns3:XPN.5>Miss</ns3:XPN.5>
+        </ns3:PID.5>
+        <ns3:PID.6>
+            <ns3:XPN.1>
+                <ns3:FN.1 />
+            </ns3:XPN.1>
+        </ns3:PID.6>
+        <ns3:PID.7>
+            <ns3:TS.1>19840110</ns3:TS.1>
+        </ns3:PID.7>
+        <ns3:PID.8>F</ns3:PID.8>
+        <ns3:PID.9>
+            <ns3:XPN.1>
+                <ns3:FN.1 />
+            </ns3:XPN.1>
+            <ns3:XPN.2 />
+        </ns3:PID.9>
+        <ns3:PID.11>
+            <ns3:XAD.1>
+                <ns3:SAD.1>7 Pengarth</ns3:SAD.1>
+            </ns3:XAD.1>
+            <ns3:XAD.2>Conwy</ns3:XAD.2>
+            <ns3:XAD.3>Conwy</ns3:XAD.3>
+            <ns3:XAD.4 />
+            <ns3:XAD.5>LL32 8RW</ns3:XAD.5>
+            <ns3:XAD.7>H</ns3:XAD.7>
+        </ns3:PID.11>
+        <ns3:PID.11>
+            <ns3:XAD.1>
+                <ns3:SAD.1>7 Pengarth</ns3:SAD.1>
+            </ns3:XAD.1>
+            <ns3:XAD.2>Conwy</ns3:XAD.2>
+            <ns3:XAD.3>Conwy</ns3:XAD.3>
+            <ns3:XAD.4 />
+            <ns3:XAD.5>LL32 8RW</ns3:XAD.5>
+            <ns3:XAD.7>M</ns3:XAD.7>
+        </ns3:PID.11>
+        <ns3:PID.13>
+            <ns3:XTN.1 />
+            <ns3:XTN.2 />
+            <ns3:XTN.3 />
+            <ns3:XTN.4 />
+            <ns3:XTN.9 />
+        </ns3:PID.13>
+        <ns3:PID.13>
+            <ns3:XTN.1 />
+            <ns3:XTN.2 />
+            <ns3:XTN.3 />
+            <ns3:XTN.9 />
+        </ns3:PID.13>
+        <ns3:PID.13>
+            <ns3:XTN.1 />
+            <ns3:XTN.2 />
+            <ns3:XTN.3 />
+            <ns3:XTN.9 />
+        </ns3:PID.13>
+        <ns3:PID.16>
+            <ns3:CE.1>9</ns3:CE.1>
+        </ns3:PID.16>
+        <ns3:PID.17>
+            <ns3:CE.1>Z</ns3:CE.1>
+        </ns3:PID.17>
+        <ns3:PID.22>
+            <ns3:CE.1>ZZ</ns3:CE.1>
+        </ns3:PID.22>
+        <ns3:PID.29>
+            <ns3:TS.1 />
+        </ns3:PID.29>
+        <ns3:PID.30>N</ns3:PID.30>
+        <ns3:PID.32 />
+        <ns3:PID.33>
+            <ns3:TS.1>20250210112448</ns3:TS.1>
+        </ns3:PID.33>
+    </ns3:PID>
+    <ns3:PD1>
+        <ns3:PD1.3>
+            <ns3:XON.1>QVM/DANESBURY SITE</ns3:XON.1>
+            <ns3:XON.10>Y02029</ns3:XON.10>
+        </ns3:PD1.3>
+        <ns3:PD1.4>
+            <ns3:XCN.1>G6762874</ns3:XCN.1>
+            <ns3:XCN.2>
+                <ns3:FN.1>PARRY</ns3:FN.1>
+            </ns3:XCN.2>
+            <ns3:XCN.3>A</ns3:XCN.3>
+        </ns3:PD1.4>
+    </ns3:PD1>
+    <ns3:NK1>
+        <ns3:NK1.1>1</ns3:NK1.1>
+        <ns3:NK1.2>
+            <ns3:XPN.1>
+                <ns3:FN.1 />
+            </ns3:XPN.1>
+        </ns3:NK1.2>
+        <ns3:NK1.3>
+            <ns3:CE.1 />
+            <ns3:CE.2 />
+        </ns3:NK1.3>
+        <ns3:NK1.4>
+            <ns3:XAD.1>
+                <ns3:SAD.1 />
+            </ns3:XAD.1>
+            <ns3:XAD.2 />
+            <ns3:XAD.3 />
+            <ns3:XAD.4 />
+            <ns3:XAD.5 />
+        </ns3:NK1.4>
+        <ns3:NK1.5>
+            <ns3:XTN.1 />
+            <ns3:XTN.2 />
+            <ns3:XTN.3 />
+            <ns3:XTN.9 />
+        </ns3:NK1.5>
+        <ns3:NK1.5>
+            <ns3:XTN.1 />
+            <ns3:XTN.2 />
+            <ns3:XTN.3 />
+            <ns3:XTN.9 />
+        </ns3:NK1.5>
+    </ns3:NK1>
+    <ns3:NK1>
+        <ns3:NK1.1>2</ns3:NK1.1>
+        <ns3:NK1.2>
+            <ns3:XPN.1>
+                <ns3:FN.1 />
+            </ns3:XPN.1>
+        </ns3:NK1.2>
+        <ns3:NK1.3>
+            <ns3:CE.1 />
+            <ns3:CE.2 />
+        </ns3:NK1.3>
+        <ns3:NK1.4>
+            <ns3:XAD.1>
+                <ns3:SAD.1 />
+            </ns3:XAD.1>
+            <ns3:XAD.2 />
+            <ns3:XAD.3 />
+            <ns3:XAD.4 />
+            <ns3:XAD.5 />
+        </ns3:NK1.4>
+        <ns3:NK1.5>
+            <ns3:XTN.1 />
+            <ns3:XTN.2 />
+            <ns3:XTN.3 />
+            <ns3:XTN.9 />
+        </ns3:NK1.5>
+        <ns3:NK1.5>
+            <ns3:XTN.1 />
+            <ns3:XTN.2 />
+            <ns3:XTN.3 />
+            <ns3:XTN.9 />
+        </ns3:NK1.5>
+    </ns3:NK1>
+    <ns3:PV1>
+        <ns3:PV1.1 />
+        <ns3:PV1.2 />
+        <ns3:PV1.3>
+            <ns3:PL.1 />
+            <ns3:PL.4>
+                <ns3:HD.1 />
+            </ns3:PL.4>
+            <ns3:PL.9 />
+        </ns3:PV1.3>
+        <ns3:PV1.4 />
+        <ns3:PV1.6>
+            <ns3:PL.1 />
+            <ns3:PL.9 />
+        </ns3:PV1.6>
+        <ns3:PV1.9>
+            <ns3:XCN.1 />
+            <ns3:XCN.2>
+                <ns3:FN.1 />
+            </ns3:XCN.2>
+            <ns3:XCN.4 />
+        </ns3:PV1.9>
+        <ns3:PV1.10 />
+        <ns3:PV1.14 />
+        <ns3:PV1.17>
+            <ns3:XCN.1 />
+            <ns3:XCN.2>
+                <ns3:FN.1 />
+            </ns3:XCN.2>
+            <ns3:XCN.4 />
+        </ns3:PV1.17>
+        <ns3:PV1.18 />
+        <ns3:PV1.19>
+            <ns3:CX.1 />
+            <ns3:CX.4>
+                <ns3:HD.1 />
+            </ns3:CX.4>
+            <ns3:CX.5 />
+        </ns3:PV1.19>
+        <ns3:PV1.36 />
+        <ns3:PV1.37>
+            <ns3:DLD.1 />
+        </ns3:PV1.37>
+        <ns3:PV1.44>
+            <ns3:TS.1 />
+        </ns3:PV1.44>
+        <ns3:PV1.45>
+            <ns3:TS.1 />
+        </ns3:PV1.45>
+        <ns3:PV1.50>
+            <ns3:CX.1 />
+        </ns3:PV1.50>
+    </ns3:PV1>
+    <ns3:PV2>
+        <ns3:PV2.3>
+            <ns3:CE.1 />
+            <ns3:CE.2 />
+        </ns3:PV2.3>
+        <ns3:PV2.12 />
+        <ns3:PV2.24 />
+    </ns3:PV2>
+</ns3:ADT_A05>
