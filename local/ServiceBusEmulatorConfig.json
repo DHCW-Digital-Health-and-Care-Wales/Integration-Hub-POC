@@ -22,7 +22,7 @@
 
         "Topics": [
           {
-            "Name": "topic.1",
+            "Name": "dhcw-integration-hub-poc-docker-valid-wpas",
             "Properties": {
               "DefaultMessageTimeToLive": "PT1H",
               "DuplicateDetectionHistoryTimeWindow": "PT20S",
@@ -30,7 +30,7 @@
             },
             "Subscriptions": [
               {
-                "Name": "subscription.1",
+                "Name": "dhcw-integration-hub-poc-docker-wpas-to-hl7-sub",
                 "Properties": {
                   "DeadLetteringOnMessageExpiration": false,
                   "DefaultMessageTimeToLive": "PT1H",

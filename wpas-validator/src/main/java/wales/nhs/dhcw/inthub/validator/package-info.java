@@ -1,4 +1,4 @@
 /**
  * Module for validating WPAS messages.
  */
-package wales.nhs.dhcw;
+package wales.nhs.dhcw.inthub.validator;
