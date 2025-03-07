@@ -1,4 +1,4 @@
-package wales.nhs.dhcw.inthub.validator;
+package wales.nhs.dhcw.inthub.validator.wpas.xml.validator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +10,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.InputStream;
+import java.util.Optional;
 
 public class WpasXmlValidator {
 
@@ -40,15 +41,13 @@ public class WpasXmlValidator {
         return validator;
     }
 
-    public boolean isValid(InputStream inputStream) {
+    public ValidationResult isValid(InputStream inputStream) {
         try {
             validator.validate(new StreamSource(inputStream));
-            return true; // Validation successful
+            return new ValidationResult(true, Optional.empty()); // Validation successful
         } catch (Exception e) {
             LOGGER.error("XML Validation Error: {}", e.getMessage());
-            return false; // Validation failed
+            return new ValidationResult(false, Optional.of(e.getMessage())); // Validation failed
         }
     }
-
-
 }

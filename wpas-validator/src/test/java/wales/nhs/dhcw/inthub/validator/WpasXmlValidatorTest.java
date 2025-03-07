@@ -2,15 +2,13 @@ package wales.nhs.dhcw.inthub.validator;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+import wales.nhs.dhcw.inthub.validator.wpas.xml.validator.ValidationResult;
+import wales.nhs.dhcw.inthub.validator.wpas.xml.validator.WpasXmlValidator;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.stream.Collectors;
 
 class WpasXmlValidatorTest {
 
@@ -18,24 +16,24 @@ class WpasXmlValidatorTest {
 
     @Test
     void isValid_called_with_valid_utf_8_xml_returns_true() throws IOException {
-        boolean result;
+        ValidationResult result;
 
         try (InputStream inputStream = WpasXmlValidatorTest.class.getResourceAsStream("/wpas-mpa.xml");) {
             result = wpasXmlValidator.isValid(inputStream);
         }
 
-        assertTrue(result);
+        assertTrue(result.success());
     }
 
     @Test
     void isValid_called_with_valid_utf_16_xml_returns_true() throws IOException {
-        boolean result;
+        ValidationResult result;
 
         try (InputStream inputStream = WpasXmlValidatorTest.class.getResourceAsStream("/wpas-mpi.xml");) {
             result = wpasXmlValidator.isValid(inputStream);
         }
 
-        assertTrue(result);
+        assertTrue(result.success());
     }
 
     @Test
@@ -50,9 +48,9 @@ class WpasXmlValidatorTest {
         """;
 
         InputStream inputStream = new ByteArrayInputStream(invalidXml.getBytes(StandardCharsets.UTF_16));
-        boolean result = wpasXmlValidator.isValid(inputStream);
+        ValidationResult result = wpasXmlValidator.isValid(inputStream);
 
-        assertFalse(result);
+        assertFalse(result.success());
     }
 
     @Test
@@ -60,9 +58,9 @@ class WpasXmlValidatorTest {
         String emptyXml = "";
 
         InputStream inputStream = new ByteArrayInputStream(emptyXml.getBytes());
-        boolean result = wpasXmlValidator.isValid(inputStream);
+        ValidationResult result = wpasXmlValidator.isValid(inputStream);
 
-        assertFalse(result);
+        assertFalse(result.success());
     }
 }
 
