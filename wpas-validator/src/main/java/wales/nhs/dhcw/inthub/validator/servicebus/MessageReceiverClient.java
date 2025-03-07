@@ -2,10 +2,12 @@ package wales.nhs.dhcw.inthub.validator.servicebus;
 
 import com.azure.messaging.servicebus.ServiceBusReceivedMessage;
 import com.azure.messaging.servicebus.ServiceBusReceiverClient;
+import com.azure.messaging.servicebus.models.DeadLetterOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import wales.nhs.dhcw.inthub.validator.wpas.xml.validator.ValidationResult;
 
-import java.util.function.Predicate;
+import java.util.function.Function;
 
 public class MessageReceiverClient implements AutoCloseable {
 
@@ -17,16 +19,18 @@ public class MessageReceiverClient implements AutoCloseable {
         this.serviceBusReceiverClient = serviceBusReceiverClient;
     }
 
-    public void receiveMessages(int numOfMessages, Predicate<ServiceBusReceivedMessage> messageValidator) {
+    public void receiveMessages(int numOfMessages, Function<ServiceBusReceivedMessage, ValidationResult> messageValidator) {
         serviceBusReceiverClient.receiveMessages(numOfMessages).forEach(msg -> {
             try {
-                boolean success = messageValidator.test(msg);
+                var validationResult = messageValidator.apply(msg);
 
-                if (success) {
+                if (validationResult.success()) {
                     serviceBusReceiverClient.complete(msg);
                     logger.debug("Message processed and completed: {}", msg.getMessageId());
                 } else {
-                    serviceBusReceiverClient.deadLetter(msg);
+                    serviceBusReceiverClient.deadLetter(msg,
+                        new DeadLetterOptions()
+                            .setDeadLetterReason(validationResult.errorReason().get()));
                     logger.error("Message validation failed, message dead lettered: {}", msg.getMessageId());
                 }
             } catch (RuntimeException e) {

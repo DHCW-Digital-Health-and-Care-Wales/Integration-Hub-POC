@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import wales.nhs.dhcw.inthub.validator.servicebus.MessageReceiverClient;
 import wales.nhs.dhcw.inthub.validator.servicebus.MessageSenderClient;
 import wales.nhs.dhcw.inthub.validator.servicebus.ServiceBusClientFactory;
+import wales.nhs.dhcw.inthub.validator.wpas.xml.validator.WpasXmlValidator;
 
 /**
  * Main class for the application.
@@ -17,7 +18,7 @@ public final class Main {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
     private static final int MAX_BATCH_SIZE = 1000;
-    private static volatile boolean PROCESSOR_RUNNING = true;
+    private static volatile boolean VALIDATOR_RUNNING = true;
 
     public static void main(String[] args) {
         AppConfig config = AppConfig.readEnvConfig();
@@ -26,7 +27,7 @@ public final class Main {
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             LOGGER.info("Shutting down the validator");
-            PROCESSOR_RUNNING = false;
+            VALIDATOR_RUNNING = false;
         }));
 
         try (MessageSenderClient senderClient = factory.createMessageSenderClient();
@@ -34,16 +35,16 @@ public final class Main {
 
             LOGGER.info("Validator started.");
 
-            while (PROCESSOR_RUNNING) {
+            while (VALIDATOR_RUNNING) {
                 receiverClient.receiveMessages(MAX_BATCH_SIZE, message -> {
                     var messageBody = message.getBody();
                     LOGGER.debug("Received message: {}", messageBody);
 
-                    if(wpasXmlValidator.isValid(messageBody.toStream())){
+                    var validationResult = wpasXmlValidator.isValid(messageBody.toStream());
+                    if(validationResult.success()){
                         senderClient.sendMessage(messageBody);
-                        return true;
                     }
-                    return false;
+                    return validationResult;
                 });
             }
         }
