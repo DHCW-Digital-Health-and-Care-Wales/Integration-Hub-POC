@@ -23,7 +23,7 @@ public class MprToAdtA40Mapper {
                 MRGMapper(transaction);
             }
         } else {
-            return null;
+            throw new RuntimeException("Not Able to Map XLM to ADT_A40");
         }
         return adtMessage;
     }
@@ -37,8 +37,6 @@ public class MprToAdtA40Mapper {
             adtMessage.getMSH().getEncodingCharacters().setValue("^~\\&");
             adtMessage.getMSH().getMsh3_SendingApplication().getNamespaceID().setValue(transaction.getSYSTEMID());
             adtMessage.getMSH().getMsh4_SendingFacility().getNamespaceID().setValue(transaction.getDHACODE());
-            adtMessage.getMSH().getReceivingApplication().getNamespaceID().setValue("200");
-            adtMessage.getMSH().getReceivingFacility().getNamespaceID().setValue("200");
 
             adtMessage.getMSH().getDateTimeOfMessage().getTs1_Time().setValue(dateTimeProvider.getCurrentDatetime());//yyyyMMddHHmmss
             adtMessage.getMSH().getMsh9_MessageType().getMsg1_MessageCode().setValue("ADT");
@@ -56,9 +54,9 @@ public class MprToAdtA40Mapper {
 
     public ADT_A39 EVNMapper(MAINDATA.TRANSACTION transaction) throws DataTypeException {
         try {
-            adtMessage.getEVN().getEvn2_RecordedDateTime().getTs1_Time().setValue(dateTimeProvider.getCurrentDatetime());
+//            adtMessage.getEVN().getEvn2_RecordedDateTime().getTs1_Time().setValue(dateTimeProvider.getCurrentDatetime()); // Need to do
             adtMessage.getEVN().getEvn5_OperatorID(0).getXcn1_IDNumber().setValue(transaction.getUSERID());
-            adtMessage.getEVN().getEvn6_EventOccurred().getTs1_Time().setValue(dateTimeProvider.getCurrentDatetime());
+//            adtMessage.getEVN().getEvn6_EventOccurred().getTs1_Time().setValue(dateTimeProvider.getCurrentDatetime());// Need to do
             adtMessage.getEVN().getEvn7_EventFacility().getHd1_NamespaceID().setValue(" ");
 
             return adtMessage;
@@ -68,8 +66,8 @@ public class MprToAdtA40Mapper {
     }
 
     public ADT_A39 PIDMapper(MAINDATA.TRANSACTION transaction) throws DataTypeException {
-        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        DateTimeFormatter inputdateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        DateTimeFormatter requiredDateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
         try {
             adtMessage.getPATIENT().getPID().getPid1_SetIDPID().setValue("1");
@@ -87,7 +85,7 @@ public class MprToAdtA40Mapper {
 
             adtMessage.getPATIENT().getPID().getPid6_MotherSMaidenName(0).getXpn1_FamilyName().getFn1_Surname().setValue(" ");
             LocalDate date = LocalDate.parse(transaction.getBIRTHDATE(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            String outputDate = date.format(outputFormatter);
+            String outputDate = date.format(inputdateFormatter);
             adtMessage.getPATIENT().getPID().getPid7_DateTimeOfBirth().getTs1_Time().setValue(outputDate);//yyyymmdd
             adtMessage.getPATIENT().getPID().getPid8_AdministrativeSex().setValue(transaction.getSEX());
             adtMessage.getPATIENT().getPID().getPid9_PatientAlias(0).getXpn1_FamilyName().getFn1_Surname().setValue(" ");
@@ -127,7 +125,7 @@ public class MprToAdtA40Mapper {
             adtMessage.getPATIENT().getPID().getPid22_EthnicGroup(0).getCe1_Identifier().setValue(transaction.getETHNICORIGIN());
             if (transaction.getDEATHDATE() != null && !transaction.getDEATHDATE().isBlank()) {
                 LocalDate date1 = LocalDate.parse(transaction.getBIRTHDATE(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                String deathDate = date1.format(outputFormatter);
+                String deathDate = date1.format(inputdateFormatter);
                 adtMessage.getPATIENT().getPID().getPid29_PatientDeathDateAndTime().getTs1_Time().setValue(deathDate);
                 adtMessage.getPATIENT().getPID().getPid30_PatientDeathIndicator().setValue("Y");
             } else {
@@ -138,7 +136,7 @@ public class MprToAdtA40Mapper {
 
             DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
             LocalDateTime dateTime = LocalDateTime.parse(transaction.getUPDATEDATE(), inputFormatter);
-            adtMessage.getPATIENT().getPID().getPid33_LastUpdateDateTime().getTs1_Time().setValue(dateTime.format(dateTimeFormatter));
+            adtMessage.getPATIENT().getPID().getPid33_LastUpdateDateTime().getTs1_Time().setValue(dateTime.format(requiredDateTimeFormatter));
 
             return adtMessage;
         } catch (Exception e) {
