@@ -1,18 +1,17 @@
-package wales.nhs.dhcw.inthub.validator.servicebus;
+package wales.nhs.dhcw.msgbus;
 
 import com.azure.identity.DefaultAzureCredential;
 import com.azure.identity.DefaultAzureCredentialBuilder;
 import com.azure.messaging.servicebus.ServiceBusClientBuilder;
 import com.azure.messaging.servicebus.ServiceBusReceiverClient;
 import com.azure.messaging.servicebus.ServiceBusSenderClient;
-import wales.nhs.dhcw.inthub.validator.AppConfig;
 
 public class ServiceBusClientFactory {
 
-    private final AppConfig config;
+    private final ConnectionConfig config;
     private final ServiceBusClientBuilder serviceBusClientBuilder;
 
-    public ServiceBusClientFactory(AppConfig config) {
+    public ServiceBusClientFactory(ConnectionConfig config) {
         this.config = config;
         serviceBusClientBuilder = buildServiceBusClientBuilder();
     }
@@ -32,19 +31,19 @@ public class ServiceBusClientFactory {
         return serviceBusClientBuilder;
     }
 
-    public MessageSenderClient createMessageSenderClient() {
+    public MessageSenderClient createMessageSenderClient(String topicName) {
         ServiceBusSenderClient senderClient = serviceBusClientBuilder
             .sender()
-            .topicName(config.validatedWpasEgressTopicName())
+            .topicName(topicName)
             .buildClient();
 
-        return new MessageSenderClient(senderClient, config.validatedWpasEgressTopicName());
+        return new MessageSenderClient(senderClient, topicName);
     }
 
-    public MessageReceiverClient createMessageReceiverClient() {
+    public MessageReceiverClient createMessageReceiverClient(String queueName) {
         ServiceBusReceiverClient receiverClient = serviceBusClientBuilder
             .receiver()
-            .queueName(config.ingressQueueName())
+            .queueName(queueName)
             .buildClient();
 
         return new MessageReceiverClient(receiverClient);

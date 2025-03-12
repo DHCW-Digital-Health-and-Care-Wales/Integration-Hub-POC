@@ -1,4 +1,4 @@
-package wales.nhs.dhcw.inthub.validator.servicebus;
+package wales.nhs.dhcw.msgbus;
 
 import com.azure.core.util.BinaryData;
 import com.azure.messaging.servicebus.ServiceBusMessage;
@@ -21,6 +21,10 @@ public class MessageSenderClient implements AutoCloseable {
     public void sendMessage(BinaryData message) {
         serviceBusSenderClient.sendMessage(new ServiceBusMessage(message));
         logger.debug("Message sent successfully to topic: {}", topicName);
+    }
+
+    public void sendMessage(String message) {
+        sendMessage(BinaryData.fromString(message));
     }
 
     @Override

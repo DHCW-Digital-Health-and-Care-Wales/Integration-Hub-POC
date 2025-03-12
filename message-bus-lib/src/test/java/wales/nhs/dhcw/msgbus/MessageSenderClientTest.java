@@ -1,16 +1,14 @@
-package wales.nhs.dhcw.inthub.validator.servicebus;
+package wales.nhs.dhcw.msgbus;
 
 import com.azure.core.util.BinaryData;
 import com.azure.messaging.servicebus.ServiceBusSenderClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class MessageSenderClientTest {
@@ -36,8 +34,8 @@ class MessageSenderClientTest {
         messageSenderClient.sendMessage(BinaryData.fromString(message));
 
         // Assert
-        verify(serviceBusSenderClient, times(1))
-            .sendMessage(argThat(serviceBusMessage -> serviceBusMessage.getBody().toString().equals(message)));
+        Mockito.verify(serviceBusSenderClient, Mockito.times(1))
+            .sendMessage(ArgumentMatchers.argThat(serviceBusMessage -> serviceBusMessage.getBody().toString().equals(message)));
     }
 
     @Test
@@ -46,7 +44,7 @@ class MessageSenderClientTest {
         messageSenderClient.close();
 
         // Assert
-        verify(serviceBusSenderClient).close();
+        Mockito.verify(serviceBusSenderClient).close();
     }
 }
 
