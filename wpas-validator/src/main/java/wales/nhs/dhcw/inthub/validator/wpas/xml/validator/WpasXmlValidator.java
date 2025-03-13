@@ -3,6 +3,7 @@ package wales.nhs.dhcw.inthub.validator.wpas.xml.validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
+import wales.nhs.dhcw.msgbus.ProcessingResult;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.stream.StreamSource;
@@ -10,7 +11,6 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.InputStream;
-import java.util.Optional;
 
 public class WpasXmlValidator {
 
@@ -41,13 +41,13 @@ public class WpasXmlValidator {
         return validator;
     }
 
-    public ValidationResult isValid(InputStream inputStream) {
+    public ProcessingResult isValid(InputStream inputStream) {
         try {
             validator.validate(new StreamSource(inputStream));
-            return new ValidationResult(true, Optional.empty()); // Validation successful
+            return ProcessingResult.successful();
         } catch (Exception e) {
             LOGGER.error("XML Validation Error: {}", e.getMessage());
-            return new ValidationResult(false, Optional.of(e.getMessage())); // Validation failed
+            return ProcessingResult.failed(e.getMessage());
         }
     }
 }

@@ -45,6 +45,21 @@ services:
         aliases:
           - "wpas-validator"
 
+  wpas-hl7-translator:
+    container_name: wpas-hl7-translator
+    build:
+      context: ../wpas-hl7-translator
+      dockerfile: ./Dockerfile
+    restart: always
+    env_file:
+      - ../wpas-hl7-translator/.env
+    depends_on:
+      - emulator
+    networks:
+      integration-hub-poc:
+        aliases:
+          - "wpas-hl7-translator"
+
 networks:
   integration-hub-poc:
 
