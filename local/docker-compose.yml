@@ -33,7 +33,7 @@ services:
   wpas-validator:
     container_name: wpas-validator
     build:
-      context: ../was-validator
+      context: ../wpas-validator
       dockerfile: ./Dockerfile
     restart: always
     env_file:

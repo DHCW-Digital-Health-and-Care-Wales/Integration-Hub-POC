@@ -2,7 +2,7 @@ package wales.nhs.dhcw.msgbus;
 
 public record ConnectionConfig(
     String connectionString,
-    String fullyQualifiedNamespace
+    String serviceBusNamespace
 ) {
 
     public boolean isUsingConnectionString() {

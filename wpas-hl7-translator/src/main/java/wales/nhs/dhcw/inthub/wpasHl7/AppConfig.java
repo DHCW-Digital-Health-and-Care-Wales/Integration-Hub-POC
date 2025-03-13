@@ -4,7 +4,7 @@ public record AppConfig(
     String connectionString,
     String translationQueueName,
     String sendersTopicName,
-    String fullyQualifiedNamespace
+    String serviceBusNamespace
 ) {
 
     /**

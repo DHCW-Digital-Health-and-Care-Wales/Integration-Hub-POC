@@ -23,7 +23,7 @@ public final class Main {
 
     public static void main(String[] args) {
         AppConfig config = AppConfig.readEnvConfig();
-        ConnectionConfig clientConfig = new ConnectionConfig(config.connectionString(), config.fullyQualifiedNamespace());
+        ConnectionConfig clientConfig = new ConnectionConfig(config.connectionString(), config.serviceBusNamespace());
         ServiceBusClientFactory factory = new ServiceBusClientFactory(clientConfig);
         WpasXmlValidator wpasXmlValidator = new WpasXmlValidator();
 

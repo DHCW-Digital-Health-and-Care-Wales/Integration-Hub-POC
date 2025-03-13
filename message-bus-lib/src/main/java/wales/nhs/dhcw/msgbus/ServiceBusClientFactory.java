@@ -8,6 +8,7 @@ import com.azure.messaging.servicebus.ServiceBusSenderClient;
 
 public class ServiceBusClientFactory {
 
+    public static final String SERVICEBUS_NAMESPACE_SUFFIX = ".servicebus.windows.net";
     private final ConnectionConfig config;
     private final ServiceBusClientBuilder serviceBusClientBuilder;
 
@@ -24,7 +25,7 @@ public class ServiceBusClientFactory {
         } else {
             DefaultAzureCredential credential = new DefaultAzureCredentialBuilder().build();
             serviceBusClientBuilder
-                .fullyQualifiedNamespace(config.fullyQualifiedNamespace() + ".servicebus.windows.net")
+                .fullyQualifiedNamespace(config.serviceBusNamespace() + SERVICEBUS_NAMESPACE_SUFFIX)
                 .credential(credential);
         }
 

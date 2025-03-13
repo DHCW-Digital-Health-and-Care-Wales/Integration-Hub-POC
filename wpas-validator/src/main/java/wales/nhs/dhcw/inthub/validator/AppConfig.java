@@ -4,7 +4,7 @@ public record AppConfig(
     String connectionString,
     String ingressQueueName,
     String validatedWpasEgressTopicName,
-    String fullyQualifiedNamespace
+    String serviceBusNamespace
 ) {
 
     /**
