@@ -6,6 +6,10 @@ import jakarta.xml.bind.Unmarshaller;
 import wales.nhs.dhcw.inthub.wpasHl7.xml.MAINDATA;
 
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+//import java.io.InputStreamReader;
+//import java.nio.charset.StandardCharsets;
 
 public class WpasXmlParser {
 
@@ -16,7 +20,13 @@ public class WpasXmlParser {
     }
 
     public MAINDATA parse(InputStream xmlStream) throws JAXBException {
-        Unmarshaller jaxbUnmarshaller = context.createUnmarshaller();
-        return (MAINDATA) jaxbUnmarshaller.unmarshal(xmlStream);
+            Unmarshaller jaxbUnmarshaller = context.createUnmarshaller();
+            return (MAINDATA) jaxbUnmarshaller.unmarshal(xmlStream);
+    }
+
+    public MAINDATA parseUTF8(InputStream xmlStream) throws JAXBException {
+            Unmarshaller jaxbUnmarshaller = context.createUnmarshaller();
+            InputStreamReader reader = new InputStreamReader(xmlStream, StandardCharsets.UTF_8);
+            return (MAINDATA) jaxbUnmarshaller.unmarshal(reader);
     }
 }
