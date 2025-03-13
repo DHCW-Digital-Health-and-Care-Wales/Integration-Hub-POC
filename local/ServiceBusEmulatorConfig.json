@@ -33,7 +33,6 @@
             }
           }
         ],
-
         "Topics": [
           {
             "Name": "dhcw-integration-hub-poc-docker-valid-wpas",
@@ -44,7 +43,7 @@
             },
             "Subscriptions": [
               {
-                "Name": "dhcw-integration-hub-poc-docker-wpas-to-hl7-sub",
+                "Name": "dhcw-integration-hub-poc-docker-wpas-valid-preview",
                 "Properties": {
                   "DeadLetteringOnMessageExpiration": false,
                   "DefaultMessageTimeToLive": "PT1H",
@@ -52,6 +51,18 @@
                   "MaxDeliveryCount": 3,
                   "ForwardDeadLetteredMessagesTo": "",
                   "ForwardTo": "",
+                  "RequiresSession": false
+                }
+              },
+              {
+                "Name": "dhcw-integration-hub-poc-docker-wpas-to-hl7-sub",
+                "Properties": {
+                  "DeadLetteringOnMessageExpiration": false,
+                  "DefaultMessageTimeToLive": "PT1H",
+                  "LockDuration": "PT1M",
+                  "MaxDeliveryCount": 3,
+                  "ForwardDeadLetteredMessagesTo": "",
+                  "ForwardTo": "dhcw-integration-hub-poc-docker-translation",
                   "RequiresSession": false
                 }
               }
@@ -73,7 +84,7 @@
                   "LockDuration": "PT1M",
                   "MaxDeliveryCount": 3,
                   "ForwardDeadLetteredMessagesTo": "",
-                  "ForwardTo": "dhcw-integration-hub-poc-docker-translation",
+                  "ForwardTo": "",
                   "RequiresSession": false
                 }
               }
