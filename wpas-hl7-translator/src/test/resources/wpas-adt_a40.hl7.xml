@@ -26,6 +26,9 @@
         <MSH.15>AL</MSH.15>
     </MSH>
     <EVN>
+        <EVN.2>
+            <TS.1>20250306040503</TS.1>
+        </EVN.2>
         <EVN.5>
             <XCN.1>BMAUAT082</XCN.1>
         </EVN.5>
@@ -89,7 +92,7 @@
                 </XAD.1>
                 <XAD.2>Llangefni</XAD.2>
                 <XAD.3>Isle of anglesey</XAD.3>
-                <XAD.4>""</XAD.4>
+                <XAD.4>""""</XAD.4>
                 <XAD.5>LL77 7HG</XAD.5>
                 <XAD.7>M</XAD.7>
             </PID.11>

@@ -50,7 +50,7 @@ public class MprToAdtA40Mapper {
 
     public void EVNMapper(MAINDATA.TRANSACTION transaction) throws DataTypeException {
         try {
-//            adtMessage.getEVN().getEvn2_RecordedDateTime().getTs1_Time().setValue(dateTimeProvider.getCurrentDatetime()); // Need to do
+            adtMessage.getEVN().getEvn2_RecordedDateTime().getTs1_Time().setValue(dateTimeProvider.getCurrentDatetime());
             adtMessage.getEVN().getEvn5_OperatorID(0).getXcn1_IDNumber().setValue(transaction.getUSERID());
 //            adtMessage.getEVN().getEvn6_EventOccurred().getTs1_Time().setValue(dateTimeProvider.getCurrentDatetime());// Need to do
             adtMessage.getEVN().getEvn7_EventFacility().getHd1_NamespaceID().setValue(" ");
@@ -65,13 +65,17 @@ public class MprToAdtA40Mapper {
         try {
             adtMessage.getPATIENT().getPID().getPid1_SetIDPID().setValue("1");
             var patientIdentifierList1 = adtMessage.getPATIENT().getPID().getPid3_PatientIdentifierList(0);
-            patientIdentifierList1.getCx1_IDNumber().setValue(transaction.getNHSNUMBER());
-            patientIdentifierList1.getCx4_AssigningAuthority().getHd1_NamespaceID().setValue("NHS");
-            patientIdentifierList1.getCx5_IdentifierTypeCode().setValue("NH");
+            if(Utility.getNHSNumber(transaction).isPresent()){
+                patientIdentifierList1.getCx1_IDNumber().setValue(transaction.getNHSNUMBER());
+                patientIdentifierList1.getCx4_AssigningAuthority().getHd1_NamespaceID().setValue("NHS");
+                patientIdentifierList1.getCx5_IdentifierTypeCode().setValue("NH");
+            }
 
             var patientIdentifierList2 = adtMessage.getPATIENT().getPID().getPid3_PatientIdentifierList(1);
-            patientIdentifierList2.getCx1_IDNumber().setValue(transaction.getUNITNUMBER());
-            patientIdentifierList2.getCx4_AssigningAuthority().getHd1_NamespaceID().setValue(transaction.getSYSTEMID());
+            if(Utility.getUNITNumber(transaction).isPresent()){
+                patientIdentifierList2.getCx1_IDNumber().setValue(transaction.getUNITNUMBER());
+                patientIdentifierList2.getCx4_AssigningAuthority().getHd1_NamespaceID().setValue(transaction.getSYSTEMID());
+            }
             patientIdentifierList2.getCx5_IdentifierTypeCode().setValue("PI");
 
             var patientName1 =adtMessage.getPATIENT().getPID().getPid5_PatientName(0);
@@ -99,27 +103,32 @@ public class MprToAdtA40Mapper {
             patientAddress2.getXad1_StreetAddress().getSad1_StreetOrMailingAddress().setValue(transaction.getCONTACTADDRESS1());
             patientAddress2.getXad2_OtherDesignation().setValue(transaction.getCONTACTADDRESS2());
             patientAddress2.getXad3_City().setValue(transaction.getCONTACTADDRESS3());
-            patientAddress2.getXad4_StateOrProvince().setValue(transaction.getCONTACTADDRESS4());
+            patientAddress2.getXad4_StateOrProvince().setValue(transaction.getCONTACTADDRESS4()+transaction.getCONTACTADDRESS5());
             patientAddress2.getXad5_ZipOrPostalCode().setValue(transaction.getCONTACTADDRESS6());
             patientAddress2.getXad7_AddressType().setValue("M");
 
             //13
             var phoneNumber0 = adtMessage.getPATIENT().getPID().getPid13_PhoneNumberHome(0);
-            phoneNumber0.getXtn1_TelephoneNumber().setValue(transaction.getTELEPHONEDAY());
-            phoneNumber0.getXtn2_TelecommunicationUseCode().setValue("PRN");
-            phoneNumber0.getXtn3_TelecommunicationEquipmentType().setValue("PH");
-            phoneNumber0.getXtn4_EmailAddress().setValue(transaction.getEMAIL());
-            phoneNumber0.getXtn9_AnyText().setValue("DAY");
+            if(Utility.getTELEPHONEDAY(transaction).isPresent()){
+                phoneNumber0.getXtn1_TelephoneNumber().setValue(transaction.getTELEPHONEDAY());
+                phoneNumber0.getXtn2_TelecommunicationUseCode().setValue("PRN");
+                phoneNumber0.getXtn3_TelecommunicationEquipmentType().setValue("PH");
+                phoneNumber0.getXtn4_EmailAddress().setValue(transaction.getEMAIL());
+                phoneNumber0.getXtn9_AnyText().setValue("DAY");
+            }
+
             var phoneNumber1 = adtMessage.getPATIENT().getPID().getPid13_PhoneNumberHome(1);
             phoneNumber1.getXtn1_TelephoneNumber().setValue(transaction.getTELEPHONENIGHT());
             phoneNumber1.getXtn2_TelecommunicationUseCode().setValue("PRN");
             phoneNumber1.getXtn3_TelecommunicationEquipmentType().setValue("PH");
             phoneNumber1.getXtn9_AnyText().setValue("NIGHT");
             var phoneNumber2 = adtMessage.getPATIENT().getPID().getPid13_PhoneNumberHome(2);
-            phoneNumber2.getXtn1_TelephoneNumber().setValue(transaction.getMOBILE());
-            phoneNumber2.getXtn2_TelecommunicationUseCode().setValue("PRS");
-            phoneNumber2.getXtn3_TelecommunicationEquipmentType().setValue("CP");
-            phoneNumber2.getXtn9_AnyText().setValue("Mobile");
+            if(Utility.getMOBILE(transaction).isPresent()){
+                phoneNumber2.getXtn1_TelephoneNumber().setValue(transaction.getMOBILE());
+                phoneNumber2.getXtn2_TelecommunicationUseCode().setValue("PRS");
+                phoneNumber2.getXtn3_TelecommunicationEquipmentType().setValue("CP");
+                phoneNumber2.getXtn9_AnyText().setValue("Mobile");
+            }
 
             adtMessage.getPATIENT().getPID().getPid16_MaritalStatus().getCe1_Identifier().setValue(transaction.getMARITALSTATUS());
             adtMessage.getPATIENT().getPID().getPid17_Religion().getCe1_Identifier().setValue(transaction.getRELIGIONSTATUS());
