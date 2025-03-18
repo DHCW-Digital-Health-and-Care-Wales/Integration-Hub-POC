@@ -39,11 +39,12 @@ public final class Main {
             while (APP_RUNNING) {
                 receiverClient.receiveMessages(MAX_BATCH_SIZE, message -> {
                     var messageBody = message.getBody();
+                    var enqueuedTime = message.getEnqueuedTime();
                     LOGGER.debug("Received message: {}", messageBody);
 
                     try {
                         var mainData = parser.parse(messageBody.toStream());
-                        var hl7Data = translator.translate(mainData);
+                        var hl7Data = translator.translate(mainData,enqueuedTime);
                         var serializedHl7 = hl7Encoder.encode(hl7Data);
                         senderClient.sendMessage(serializedHl7);
 

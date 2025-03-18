@@ -6,6 +6,7 @@ import wales.nhs.dhcw.inthub.wpasHl7.xml.MAINDATA;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 public class MprToAdtA40Mapper {
     private final ADT_A39 adtMessage;
@@ -16,16 +17,16 @@ public class MprToAdtA40Mapper {
         adtMessage = new ADT_A39();
     }
 
-    public ADT_A39 ADT_A40Mapper(MAINDATA.TRANSACTION transaction) throws DataTypeException {
+    public ADT_A39 ADT_A40Mapper(MAINDATA.TRANSACTION transaction, OffsetDateTime queueDateTime) throws DataTypeException {
         MshMapper(transaction);
-        EVNMapper(transaction);
+        EVNMapper(transaction,queueDateTime);
         PIDMapper(transaction);
         PD1Mapper(transaction);
         MRGMapper(transaction);
         return adtMessage;
     }
 
-
+    
     public void MshMapper(MAINDATA.TRANSACTION transaction) throws DataTypeException {
 
         try {
@@ -48,11 +49,14 @@ public class MprToAdtA40Mapper {
         }
     }
 
-    public void EVNMapper(MAINDATA.TRANSACTION transaction) throws DataTypeException {
+    public void EVNMapper(MAINDATA.TRANSACTION transaction, OffsetDateTime queueDateTime) throws DataTypeException {
         try {
             adtMessage.getEVN().getEvn2_RecordedDateTime().getTs1_Time().setValue(dateTimeProvider.getCurrentDatetime());
             adtMessage.getEVN().getEvn5_OperatorID(0).getXcn1_IDNumber().setValue(transaction.getUSERID());
-//            adtMessage.getEVN().getEvn6_EventOccurred().getTs1_Time().setValue(dateTimeProvider.getCurrentDatetime());// Need to do
+            if(queueDateTime!=null) {
+                String queueTime = queueDateTime.format(dateTimeProvider.getDateTimeFormatter());
+                adtMessage.getEVN().getEvn6_EventOccurred().getTs1_Time().setValue(queueTime);
+            }
             adtMessage.getEVN().getEvn7_EventFacility().getHd1_NamespaceID().setValue(" ");
 
         } catch (Exception e) {
