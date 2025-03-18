@@ -9,6 +9,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.xml.sax.SAXException;
 
+import java.time.OffsetDateTime;
+
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,9 +38,10 @@ class MpiToAdtA28MapperTest {
         // Arrange
         var wpasMessage = parser.parse(TestUtil.getTestFileStream(WPAS_MPI_XML_PATH));
         var expected = TestUtil.getTestFileContent(EXPECTED_A28_PATH);
+        OffsetDateTime messageProp = null;
 
         // Act
-        var result = translator.translate(wpasMessage);
+        var result = translator.translate(wpasMessage, messageProp);
 
         // Assert
         TestUtil.assertMatchingExpectedMessage(expected, result);
