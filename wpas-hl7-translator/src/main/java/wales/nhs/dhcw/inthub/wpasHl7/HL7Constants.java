@@ -1,6 +1,6 @@
 package wales.nhs.dhcw.inthub.wpasHl7;
 
-public class TransformerConstant {
+public class HL7Constants {
 
     public static final String PIPE_LINE = "|";
     public static final String ENCODING_CHAR = "^~\\&";

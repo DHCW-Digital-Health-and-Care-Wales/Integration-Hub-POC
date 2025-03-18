@@ -10,9 +10,11 @@ import java.time.LocalDateTime;
 public class MprToAdtA40Mapper {
     private final ADT_A39 adtMessage;
     private final DateTimeProvider dateTimeProvider;
+    private final WpasDateTimeParser wpasTimeParser;
 
     public MprToAdtA40Mapper(DateTimeProvider dateTimeProvider) {
         this.dateTimeProvider = dateTimeProvider;
+        this.wpasTimeParser = new WpasDateTimeParser();
         adtMessage = new ADT_A39();
     }
 
@@ -30,14 +32,14 @@ public class MprToAdtA40Mapper {
 
         try {
             // Mapping header
-            adtMessage.getMSH().getFieldSeparator().setValue(TransformerConstant.PIPE_LINE);
-            adtMessage.getMSH().getEncodingCharacters().setValue(TransformerConstant.ENCODING_CHAR);
+            adtMessage.getMSH().getFieldSeparator().setValue(HL7Constants.PIPE_LINE);
+            adtMessage.getMSH().getEncodingCharacters().setValue(HL7Constants.ENCODING_CHAR);
             adtMessage.getMSH().getMsh3_SendingApplication().getNamespaceID().setValue(transaction.getSYSTEMID());
             adtMessage.getMSH().getMsh4_SendingFacility().getNamespaceID().setValue(transaction.getDHACODE());
 
             adtMessage.getMSH().getDateTimeOfMessage().getTs1_Time().setValue(dateTimeProvider.getCurrentDatetime());//yyyyMMddHHmmss
-            adtMessage.getMSH().getMsh9_MessageType().getMsg1_MessageCode().setValue(TransformerConstant.ADT);
-            adtMessage.getMSH().getMsh9_MessageType().getMsg2_TriggerEvent().setValue(TransformerConstant.A40);
+            adtMessage.getMSH().getMsh9_MessageType().getMsg1_MessageCode().setValue(HL7Constants.ADT);
+            adtMessage.getMSH().getMsh9_MessageType().getMsg2_TriggerEvent().setValue(HL7Constants.A40);
             adtMessage.getMSH().getMsh9_MessageType().getMsg3_MessageStructure().setValue("ADT_A39");
             adtMessage.getMSH().getMsh10_MessageControlID().setValue(transaction.getSYSTEMID() + transaction.getTRANSACTIONID());
             adtMessage.getMSH().getProcessingID().getProcessingID().setValue("P");
@@ -85,7 +87,7 @@ public class MprToAdtA40Mapper {
             patientName1.getXpn5_PrefixEgDR().setValue(transaction.getTITLE());
 
             adtMessage.getPATIENT().getPID().getPid6_MotherSMaidenName(0).getXpn1_FamilyName().getFn1_Surname().setValue(" ");
-            LocalDate date = LocalDate.parse(transaction.getBIRTHDATE(), dateTimeProvider.getDateFormatter());
+            LocalDate date = wpasTimeParser.parseDate(transaction.getBIRTHDATE());
             adtMessage.getPATIENT().getPID().getPid7_DateTimeOfBirth().getTs1_Time().setValue(date.format(dateTimeProvider.getDateyyyyMMddFormatter()));//yyyymmdd
             adtMessage.getPATIENT().getPID().getPid8_AdministrativeSex().setValue(transaction.getSEX());
             adtMessage.getPATIENT().getPID().getPid9_PatientAlias(0).getXpn1_FamilyName().getFn1_Surname().setValue(" ");
@@ -134,7 +136,7 @@ public class MprToAdtA40Mapper {
             adtMessage.getPATIENT().getPID().getPid17_Religion().getCe1_Identifier().setValue(transaction.getRELIGIONSTATUS());
             adtMessage.getPATIENT().getPID().getPid22_EthnicGroup(0).getCe1_Identifier().setValue(transaction.getETHNICORIGIN());
             if (transaction.getDEATHDATE() != null && !transaction.getDEATHDATE().isBlank()) {
-                LocalDate deathDate = LocalDate.parse(transaction.getBIRTHDATE(), dateTimeProvider.getDateFormatter());
+                LocalDate deathDate = wpasTimeParser.parseDate(transaction.getBIRTHDATE());
                 adtMessage.getPATIENT().getPID().getPid29_PatientDeathDateAndTime().getTs1_Time().setValue(deathDate.format(dateTimeProvider.getDateyyyyMMddFormatter()));
                 adtMessage.getPATIENT().getPID().getPid30_PatientDeathIndicator().setValue("Y");
             } else {
@@ -143,7 +145,7 @@ public class MprToAdtA40Mapper {
             }
             adtMessage.getPATIENT().getPID().getPid32_IdentityReliabilityCode(0).setValue(transaction.getNHSCERTIFICATION());
 
-            LocalDateTime dateTime = LocalDateTime.parse(transaction.getUPDATEDATE(), dateTimeProvider.getDateTimeFormatterWithTFormat());
+            LocalDateTime dateTime = wpasTimeParser.parseDateTime(transaction.getUPDATEDATE());
             adtMessage.getPATIENT().getPID().getPid33_LastUpdateDateTime().getTs1_Time().setValue(dateTime.format(dateTimeProvider.getDateTimeFormatter()));
 
         } catch (Exception e) {

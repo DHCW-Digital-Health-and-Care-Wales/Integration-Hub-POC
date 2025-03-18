@@ -33,10 +33,8 @@ public class MprToA40MapperTest {
     @BeforeEach
     void setUp() throws JAXBException {
         when(dateTimeProvider.getCurrentDatetime()).thenReturn(DUMMY_TEST_TIME);
-        when(dateTimeProvider.getDateFormatter()).thenReturn(DateTimeFormatter.ofPattern(DATE_FORMAT));
         when(dateTimeProvider.getDateTimeFormatter()).thenReturn(DateTimeFormatter.ofPattern(DATETIME_FORMAT));
         when(dateTimeProvider.getDateyyyyMMddFormatter()).thenReturn(DateTimeFormatter.ofPattern(DATE_YMD_FORMAT));
-        when(dateTimeProvider.getDateTimeFormatterWithTFormat()).thenReturn(DateTimeFormatter.ofPattern(DATETIME_WITH_T_FORMAT));
 
         parser = new WpasXmlParser();
         translator = new WpasHl7Translator(dateTimeProvider);
