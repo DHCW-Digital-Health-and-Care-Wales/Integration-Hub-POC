@@ -19,6 +19,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>wales.nhs.dhcw</groupId>
+            <artifactId>message-bus-lib</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>com.azure</groupId>
             <artifactId>azure-messaging-servicebus</artifactId>
         </dependency>

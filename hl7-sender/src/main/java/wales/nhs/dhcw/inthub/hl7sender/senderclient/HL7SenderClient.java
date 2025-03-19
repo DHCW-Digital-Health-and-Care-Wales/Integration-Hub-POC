@@ -12,6 +12,7 @@ import ca.uhn.hl7v2.parser.XMLParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import wales.nhs.dhcw.inthub.hl7sender.AppConfig;
+import wales.nhs.dhcw.msgbus.ProcessingResult;
 
 import java.io.IOException;
 

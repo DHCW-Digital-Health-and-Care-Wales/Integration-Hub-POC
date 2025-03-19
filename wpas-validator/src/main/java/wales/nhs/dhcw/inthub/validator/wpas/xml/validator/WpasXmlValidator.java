@@ -47,7 +47,7 @@ public class WpasXmlValidator {
             return ProcessingResult.successful();
         } catch (Exception e) {
             LOGGER.error("XML Validation Error: {}", e.getMessage());
-            return ProcessingResult.failed(e.getMessage());
+            return ProcessingResult.failed(e.getMessage(), false);
         }
     }
 }

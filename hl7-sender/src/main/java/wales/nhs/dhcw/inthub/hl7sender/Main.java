@@ -6,8 +6,9 @@ import ca.uhn.hl7v2.HapiContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import wales.nhs.dhcw.inthub.hl7sender.senderclient.HL7SenderClient;
-import wales.nhs.dhcw.inthub.hl7sender.servicebus.MessageReceiverClient;
-import wales.nhs.dhcw.inthub.hl7sender.servicebus.ServiceBusClientFactory;
+import wales.nhs.dhcw.msgbus.ConnectionConfig;
+import wales.nhs.dhcw.msgbus.MessageReceiverClient;
+import wales.nhs.dhcw.msgbus.ServiceBusClientFactory;
 
 /**
  * Main class for the application.
@@ -24,7 +25,8 @@ public final class Main {
 
     public static void main(String[] args) throws HL7Exception {
         AppConfig config = AppConfig.readEnvConfig();
-        ServiceBusClientFactory factory = new ServiceBusClientFactory(config);
+        ConnectionConfig clientConfig = new ConnectionConfig(config.connectionString(), config.serviceBusNamespace());
+        ServiceBusClientFactory factory = new ServiceBusClientFactory(clientConfig);
         HapiContext context = new DefaultHapiContext();
         HL7SenderClient hl7SenderClient = new HL7SenderClient(context, config);
 
@@ -33,7 +35,7 @@ public final class Main {
             SENDER_RUNNING = false;
         }));
 
-        try (MessageReceiverClient receiverClient = factory.createMessageReceiverClient()) {
+        try (MessageReceiverClient receiverClient = factory.createMessageReceiverClient(config.ingressQueueName())) {
 
             LOGGER.info("HL7 sender started.");
 

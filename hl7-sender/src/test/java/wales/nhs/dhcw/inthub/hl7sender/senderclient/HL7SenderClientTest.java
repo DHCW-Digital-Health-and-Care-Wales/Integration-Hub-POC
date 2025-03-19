@@ -20,6 +20,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.xml.sax.SAXException;
 import wales.nhs.dhcw.inthub.hl7sender.AppConfig;
+import wales.nhs.dhcw.msgbus.ProcessingResult;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
