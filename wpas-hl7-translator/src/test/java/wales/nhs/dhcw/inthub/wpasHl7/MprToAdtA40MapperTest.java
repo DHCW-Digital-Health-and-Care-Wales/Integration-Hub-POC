@@ -10,20 +10,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.xml.sax.SAXException;
 
-import java.time.format.DateTimeFormatter;
-
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class MprToA40MapperTest {
+public class MprToAdtA40MapperTest {
 
     private static final String WPAS_MPI_XML_PATH = "wpas-mpr-a39.xml";
     private static final String EXPECTED_A40_PATH = "wpas-adt_a40.hl7.xml";
-    private static final String DUMMY_TEST_TIME = "20250306040503";
-    public static final String DATETIME_FORMAT = "yyyyMMddHHmmss";
-    public static final String DATE_FORMAT = "yyyy-MM-dd";
-    public static final String DATE_YMD_FORMAT = "yyyyMMdd";
-    public static final String DATETIME_WITH_T_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+    private static final String DUMMY_TEST_TIME = "20250206085438";
 
     @Mock
     private DateTimeProvider dateTimeProvider;
@@ -33,8 +27,6 @@ public class MprToA40MapperTest {
     @BeforeEach
     void setUp() throws JAXBException {
         when(dateTimeProvider.getCurrentDatetime()).thenReturn(DUMMY_TEST_TIME);
-        when(dateTimeProvider.getDateTimeFormatter()).thenReturn(DateTimeFormatter.ofPattern(DATETIME_FORMAT));
-        when(dateTimeProvider.getDateyyyyMMddFormatter()).thenReturn(DateTimeFormatter.ofPattern(DATE_YMD_FORMAT));
 
         parser = new WpasXmlParser();
         translator = new WpasHl7Translator(dateTimeProvider);

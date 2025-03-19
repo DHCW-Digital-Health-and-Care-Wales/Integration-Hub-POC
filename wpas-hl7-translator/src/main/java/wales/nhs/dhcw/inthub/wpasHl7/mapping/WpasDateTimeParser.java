@@ -1,4 +1,4 @@
-package wales.nhs.dhcw.inthub.wpasHl7;
+package wales.nhs.dhcw.inthub.wpasHl7.mapping;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
