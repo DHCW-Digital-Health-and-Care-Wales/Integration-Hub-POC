@@ -10,7 +10,6 @@ public class HL7Constants {
     public static final String DATETIME_FORMAT = "yyyyMMddHHmmss";
     public static final String DATE_FORMAT = "yyyyMMdd";
 
-
     public static final String ADDRESS_TYPE_HOME = "H";
     public static final String ADDRESS_TYPE_MAILING = "M";
     public static final String TELECOM_USE_PRIMARY_RESIDENCE_NUMBER = "PRN";

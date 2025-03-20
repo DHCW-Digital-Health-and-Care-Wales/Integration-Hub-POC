@@ -4,26 +4,31 @@ import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v251.datatype.XAD;
 import ca.uhn.hl7v2.model.v251.segment.PID;
 import wales.nhs.dhcw.inthub.wpasHl7.mapping.HL7Constants;
-import wales.nhs.dhcw.inthub.wpasHl7.mapping.MpiToAdtA28Mapper;
 import wales.nhs.dhcw.inthub.wpasHl7.mapping.MapUtils;
 import wales.nhs.dhcw.inthub.wpasHl7.xml.MAINDATA;
 
 public class PidMapper {
-    private final MapUtils utils;
 
+    public static final String FIXED_PID_ID = "1";
+    public static final String NHS_IDENTIFIER_AUTHORITY = "NHS";
+    public static final String NHS_IDENTIFIER_TYPE_CODE = "NH";
+    public static final String PATIENT_IDENTIFIER_TYPE_CODE = "PI";
+
+
+    private final MapUtils utils;
 
     public PidMapper() {
         utils = new MapUtils();
     }
 
     public void buildPid(PID pid, MAINDATA.TRANSACTION transaction) throws DataTypeException {
-        pid.getPid1_SetIDPID().setValue(MpiToAdtA28Mapper.FIXED_PID_ID);
+        pid.getPid1_SetIDPID().setValue(FIXED_PID_ID);
         var patientIdentifier1 = pid.getPid3_PatientIdentifierList(0);
         if (utils.notNullNorBlank(transaction.getNHSNUMBER())) {
             var nhsNumber = utils.stripEmptyDoubleQuotes(transaction.getNHSNUMBER());
             patientIdentifier1.getCx1_IDNumber().setValue(nhsNumber);
-            patientIdentifier1.getCx4_AssigningAuthority().getHd1_NamespaceID().setValue(MpiToAdtA28Mapper.NHS_IDENTIFIER_AUTHORITY);
-            patientIdentifier1.getCx5_IdentifierTypeCode().setValue(MpiToAdtA28Mapper.NHS_IDENTIFIER_TYPE_CODE);
+            patientIdentifier1.getCx4_AssigningAuthority().getHd1_NamespaceID().setValue(NHS_IDENTIFIER_AUTHORITY);
+            patientIdentifier1.getCx5_IdentifierTypeCode().setValue(NHS_IDENTIFIER_TYPE_CODE);
         }
 
         var patientIdentifier2 = pid.getPid3_PatientIdentifierList(1);
@@ -32,7 +37,7 @@ public class PidMapper {
             patientIdentifier2.getCx4_AssigningAuthority().getHd1_NamespaceID().setValue(
                     utils.stripEmptyDoubleQuotes(transaction.getSYSTEMID())
             );
-            patientIdentifier2.getCx5_IdentifierTypeCode().setValue(MpiToAdtA28Mapper.PATIENT_IDENTIFIER_TYPE_CODE);
+            patientIdentifier2.getCx5_IdentifierTypeCode().setValue(PATIENT_IDENTIFIER_TYPE_CODE);
         }
 
         var patientName = pid.getPid5_PatientName(0);

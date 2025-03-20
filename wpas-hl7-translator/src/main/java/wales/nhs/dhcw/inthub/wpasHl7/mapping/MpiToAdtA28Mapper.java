@@ -13,12 +13,6 @@ import wales.nhs.dhcw.inthub.wpasHl7.xml.MAINDATA;
 
 public class MpiToAdtA28Mapper {
 
-    public static final String DATE_FORMAT = "yyyyMMdd";
-    public static final String FIXED_PID_ID = "1";
-    public static final String NHS_IDENTIFIER_AUTHORITY = "NHS";
-    public static final String NHS_IDENTIFIER_TYPE_CODE = "NH";
-    public static final String PATIENT_IDENTIFIER_TYPE_CODE = "PI";
-
     private final MshMapper mshMapper;
     private final EvnMapper evnMapper;
     private final PidMapper pidMapper;

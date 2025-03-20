@@ -16,7 +16,7 @@ public class MprToAdtA40Mapper {
     private final EvnMapper evnMapper;
     private final PidMapper pidMapper;
     private final Pd1Mapper pd1Mapper;
-    private final MgrMapper mgrMapper = new MgrMapper();
+    private final MgrMapper mgrMapper;
 
     public MprToAdtA40Mapper(DateTimeProvider dateTimeProvider) {
         adtMessage = new ADT_A39();
@@ -25,6 +25,7 @@ public class MprToAdtA40Mapper {
         evnMapper = new EvnMapper(dateTimeProvider);
         pidMapper = new PidMapper();
         pd1Mapper = new Pd1Mapper();
+        mgrMapper = new MgrMapper();
     }
 
     public ADT_A39 mapMprToA40(MAINDATA.TRANSACTION transaction) throws DataTypeException {
