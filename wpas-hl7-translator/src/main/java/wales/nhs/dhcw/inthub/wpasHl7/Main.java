@@ -3,6 +3,7 @@ package wales.nhs.dhcw.inthub.wpasHl7;
 import jakarta.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import wales.nhs.dhcw.inthub.wpasHl7.mapping.hl7.Hl7DateFormat;
 import wales.nhs.dhcw.msgbus.*;
 
 /**
@@ -23,7 +24,8 @@ public final class Main {
         ConnectionConfig msgBusConfig = new ConnectionConfig(config.connectionString(), config.serviceBusNamespace());
         ServiceBusClientFactory factory = new ServiceBusClientFactory(msgBusConfig);
         WpasXmlParser parser = new WpasXmlParser();
-        WpasHl7Translator translator = new WpasHl7Translator(new DateTimeProvider());
+        Hl7DateFormat hl7DateFormat = new Hl7DateFormat();
+        WpasHl7Translator translator = new WpasHl7Translator(new DateTimeProvider(hl7DateFormat.getDateTimeFormatter()));
         Hl7Encoder hl7Encoder = new Hl7Encoder();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {

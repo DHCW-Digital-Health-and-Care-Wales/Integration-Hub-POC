@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 class MpiToAdtA28MapperTest {
 
     private static final String WPAS_MPI_XML_PATH = "wpas-mpi.xml";
-    private static final String EXPECTED_A28_PATH = "wpas-adt_a28-msh.hl7.xml";
+    private static final String EXPECTED_A28_PATH = "wpas-adt_a28.hl7.xml";
     private static final String DUMMY_TEST_TIME = "20000101010101";
 
     @Mock
