@@ -60,6 +60,21 @@ services:
         aliases:
           - "wpas-hl7-translator"
 
+  hl7-sender:
+    container_name: hl7-sender
+    build:
+      context: ../hl7-sender
+      dockerfile: ./Dockerfile
+    restart: always
+    env_file:
+      - ../hl7-sender/.env
+    depends_on:
+      - emulator
+    networks:
+      integration-hub-poc:
+        aliases:
+          - "hl7-sender"
+
 networks:
   integration-hub-poc:
 

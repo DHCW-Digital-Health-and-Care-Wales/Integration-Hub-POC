@@ -49,7 +49,7 @@ public final class Main {
 
                     } catch (Exception e) {
                         LOGGER.error("WPAS message translation error", e);
-                        return ProcessingResult.failed(e.getMessage());
+                        return ProcessingResult.failed(e.getMessage(), false);
                     }
 
                     return ProcessingResult.successful();
