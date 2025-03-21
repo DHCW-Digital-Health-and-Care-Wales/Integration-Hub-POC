@@ -70,11 +70,26 @@ services:
       - ../hl7-sender/.env
     depends_on:
       - emulator
+      - hl7-mock-receiver
     networks:
       integration-hub-poc:
         aliases:
           - "hl7-sender"
 
+  hl7-mock-receiver:
+    container_name: hl7-mock-receiver
+    build:
+      context: ../hl7-mock-receiver
+      dockerfile: ./Dockerfile
+    restart: always
+    env_file:
+      - ../hl7-mock-receiver/.env
+    depends_on:
+      - emulator
+    networks:
+      integration-hub-poc:
+        aliases:
+          - "hl7-mock-receiver"
 networks:
   integration-hub-poc:
 
