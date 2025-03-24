@@ -8,8 +8,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.xml.sax.SAXException;
+import wales.nhs.dhcw.inthub.wpasHl7.xml.QueueData;
 
-import java.time.OffsetDateTime;
 
 import static org.mockito.Mockito.when;
 
@@ -24,12 +24,14 @@ class MpiToAdtA28MapperTest {
     private DateTimeProvider dateTimeProvider;
     private WpasHl7Translator translator;
     private WpasXmlParser parser;
+    private QueueData queueData;
 
     @BeforeEach
     void setUp() throws JAXBException {
         when(dateTimeProvider.getCurrentDatetime()).thenReturn(DUMMY_TEST_TIME);
 
         parser = new WpasXmlParser();
+        queueData = new QueueData();
         translator = new WpasHl7Translator(dateTimeProvider);
     }
 
@@ -38,10 +40,10 @@ class MpiToAdtA28MapperTest {
         // Arrange
         var wpasMessage = parser.parse(TestUtil.getTestFileStream(WPAS_MPI_XML_PATH));
         var expected = TestUtil.getTestFileContent(EXPECTED_A28_PATH);
-        OffsetDateTime messageProp = null;
+        queueData.setMaindata(wpasMessage);
 
         // Act
-        var result = translator.translate(wpasMessage, messageProp);
+        var result = translator.translate(queueData);
 
         // Assert
         TestUtil.assertMatchingExpectedMessage(expected, result);

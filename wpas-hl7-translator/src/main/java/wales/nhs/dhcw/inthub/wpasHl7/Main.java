@@ -3,6 +3,7 @@ package wales.nhs.dhcw.inthub.wpasHl7;
 import jakarta.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import wales.nhs.dhcw.inthub.wpasHl7.xml.QueueData;
 import wales.nhs.dhcw.msgbus.*;
 
 /**
@@ -17,6 +18,7 @@ public final class Main {
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
     private static final int MAX_BATCH_SIZE = 1000;
     private static volatile boolean APP_RUNNING = true;
+    private static QueueData queueData = null;
 
     public static void main(String[] args) throws JAXBException {
         AppConfig config = AppConfig.readEnvConfig();
@@ -38,13 +40,14 @@ public final class Main {
 
             while (APP_RUNNING) {
                 receiverClient.receiveMessages(MAX_BATCH_SIZE, message -> {
+
                     var messageBody = message.getBody();
-                    var enqueuedTime = message.getEnqueuedTime();
                     LOGGER.debug("Received message: {}", messageBody);
 
                     try {
                         var mainData = parser.parse(messageBody.toStream());
-                        var hl7Data = translator.translate(mainData,enqueuedTime);
+                        queueData = new QueueData(mainData,message.getEnqueuedTime());
+                        var hl7Data = translator.translate(queueData);
                         var serializedHl7 = hl7Encoder.encode(hl7Data);
                         senderClient.sendMessage(serializedHl7);
 
