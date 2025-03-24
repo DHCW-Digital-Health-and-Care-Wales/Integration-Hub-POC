@@ -18,6 +18,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 @ExtendWith(MockitoExtension.class)
 class MessageReceiverClientTest {
 
@@ -32,8 +42,8 @@ class MessageReceiverClientTest {
     }
 
     private static ServiceBusReceivedMessage createMessage(String messageId) {
-        ServiceBusReceivedMessage message = Mockito.mock(ServiceBusReceivedMessage.class);
-        Mockito.when(message.getMessageId()).thenReturn(messageId);
+        ServiceBusReceivedMessage message = mock(ServiceBusReceivedMessage.class);
+        when(message.getMessageId()).thenReturn(messageId);
         return message;
     }
 
@@ -42,109 +52,125 @@ class MessageReceiverClientTest {
         // Arrange
         ServiceBusReceivedMessage message = createMessage("123");
 
-        Mockito.when(serviceBusReceiverClient.receiveMessages(ArgumentMatchers.anyInt())).thenReturn(new IterableStream<>(List.of(message)));
+        when(serviceBusReceiverClient.receiveMessages(anyInt())).thenReturn(new IterableStream<>(List.of(message)));
 
-        Function<ServiceBusReceivedMessage, ProcessingResult> validator = msg ->
-            new ProcessingResult(true, Optional.empty());
+        Function<ServiceBusReceivedMessage, ProcessingResult> processor = msg ->
+            ProcessingResult.successful();
 
         // Act
-        messageReceiverClient.receiveMessages(1, validator);
+        messageReceiverClient.receiveMessages(1, processor);
 
         // Assert
-        Mockito.verify(serviceBusReceiverClient, Mockito.times(1)).complete(message);
-        Mockito.verify(serviceBusReceiverClient, Mockito.never()).abandon(message);
+        verify(serviceBusReceiverClient, times(1)).complete(message);
+        verify(serviceBusReceiverClient, never()).abandon(message);
     }
-
-
 
     @Test
     void receiveMessages_multiple_messages_calls_complete_when_valid_message_and_abandon_when_invalid() {
         // Arrange
         ServiceBusReceivedMessage message1 = createMessage("123");
         ServiceBusReceivedMessage message2 = createMessage("456");
-        String deadLetterReason = "XML Validation Error";
+        String deadLetterReason = "XML processing Error";
 
-        Mockito.when(serviceBusReceiverClient.receiveMessages(ArgumentMatchers.anyInt())).thenReturn(new IterableStream<>(List.of(message1, message2)));
+        when(serviceBusReceiverClient.receiveMessages(anyInt())).thenReturn(new IterableStream<>(List.of(message1, message2)));
 
-        Function<ServiceBusReceivedMessage, ProcessingResult> validator = msg -> {
+        Function<ServiceBusReceivedMessage, ProcessingResult> processor = msg -> {
             if ("123".equals(msg.getMessageId())) {
-                return new ProcessingResult("123".equals(msg.getMessageId()), Optional.empty());
+                return ProcessingResult.successful();
             }
-            return new ProcessingResult(false, Optional.of(deadLetterReason));
+            return ProcessingResult.failed(deadLetterReason, false);
         };
 
         // Act
-        messageReceiverClient.receiveMessages(2, validator);
+        messageReceiverClient.receiveMessages(2, processor);
 
         // Assert
-        Mockito.verify(serviceBusReceiverClient, Mockito.times(1)).complete(message1);
-        Mockito.verify(serviceBusReceiverClient, Mockito.never()).abandon(message1);
-        Mockito.verify(serviceBusReceiverClient, Mockito.never()).complete(message2);
+        verify(serviceBusReceiverClient, times(1)).complete(message1);
+        verify(serviceBusReceiverClient, never()).abandon(message1);
+        verify(serviceBusReceiverClient, never()).complete(message2);
         ArgumentCaptor<DeadLetterOptions> captor = ArgumentCaptor.forClass(DeadLetterOptions.class);
-        Mockito.verify(serviceBusReceiverClient, Mockito.times(1)).deadLetter(ArgumentMatchers.eq(message2), captor.capture());
+        verify(serviceBusReceiverClient, times(1)).deadLetter(eq(message2), captor.capture());
 
         // Assert captured values
         DeadLetterOptions capturedOptions = captor.getValue();
-        Assertions.assertEquals(deadLetterReason, capturedOptions.getDeadLetterReason());
+        assertEquals(deadLetterReason, capturedOptions.getDeadLetterReason());
     }
 
     @Test
-    void receiveMessages_calls_deadLetter_when_message_fails_validation() {
+    void receiveMessages_calls_deadLetter_when_message_fails_processing() {
         // Arrange
         ServiceBusReceivedMessage message = createMessage("123");
 
-        Mockito.when(serviceBusReceiverClient.receiveMessages(ArgumentMatchers.anyInt())).thenReturn(new IterableStream<>(List.of(message)));
+        when(serviceBusReceiverClient.receiveMessages(anyInt())).thenReturn(new IterableStream<>(List.of(message)));
 
-        String deadLetterReason = "XML Validation Error";
-        Function<ServiceBusReceivedMessage, ProcessingResult> validator = msg ->
-            new ProcessingResult(false, Optional.of(deadLetterReason));
+        String deadLetterReason = "XML processing Error";
+        Function<ServiceBusReceivedMessage, ProcessingResult> processor = msg ->
+            ProcessingResult.failed(deadLetterReason, false);
 
         // Act
-        messageReceiverClient.receiveMessages(1, validator);
+        messageReceiverClient.receiveMessages(1, processor);
 
         // Assert
-        Mockito.verify(serviceBusReceiverClient, Mockito.never()).complete(message);
+        verify(serviceBusReceiverClient, never()).complete(message);
         ArgumentCaptor<DeadLetterOptions> captor = ArgumentCaptor.forClass(DeadLetterOptions.class);
-        Mockito.verify(serviceBusReceiverClient, Mockito.times(1)).deadLetter(ArgumentMatchers.eq(message), captor.capture());
+        verify(serviceBusReceiverClient, times(1)).deadLetter(eq(message), captor.capture());
 
         // Assert captured values
         DeadLetterOptions capturedOptions = captor.getValue();
-        Assertions.assertEquals(deadLetterReason, capturedOptions.getDeadLetterReason());
+        assertEquals(deadLetterReason, capturedOptions.getDeadLetterReason());
     }
 
     @Test
-    void receiveMessages_calls_abandon_when_exception_during_validation() {
+    void receiveMessages_calls_abandon_when_message_fails_processing_with_retry() {
         // Arrange
         ServiceBusReceivedMessage message = createMessage("123");
 
-        Mockito.when(serviceBusReceiverClient.receiveMessages(ArgumentMatchers.anyInt())).thenReturn(new IterableStream<>(List.of(message)));
+        when(serviceBusReceiverClient.receiveMessages(anyInt())).thenReturn(new IterableStream<>(List.of(message)));
 
-        Function<ServiceBusReceivedMessage, ProcessingResult> validator = msg -> {
+        Function<ServiceBusReceivedMessage, ProcessingResult> processor = msg ->
+            ProcessingResult.failed("Pipe Parsing Error", true);
+
+        // Act
+        messageReceiverClient.receiveMessages(1, processor);
+
+        // Assert
+        verify(serviceBusReceiverClient, never()).complete(message);
+        verify(serviceBusReceiverClient, times(1)).abandon(message);
+    }
+
+    @Test
+    void receiveMessages_calls_abandon_when_exception_during_processing() {
+        // Arrange
+        ServiceBusReceivedMessage message = createMessage("123");
+
+        when(serviceBusReceiverClient.receiveMessages(anyInt())).thenReturn(new IterableStream<>(List.of(message)));
+
+        Function<ServiceBusReceivedMessage, ProcessingResult> processor = msg -> {
             throw new RuntimeException("Test Exception");
         };
 
         // Act
-        messageReceiverClient.receiveMessages(1, validator);
+        messageReceiverClient.receiveMessages(1, processor);
 
         // Assert
-        Mockito.verify(serviceBusReceiverClient, Mockito.never()).complete(message);
-        Mockito.verify(serviceBusReceiverClient, Mockito.times(1)).abandon(message);
+        verify(serviceBusReceiverClient, never()).complete(message);
+        verify(serviceBusReceiverClient, times(1)).abandon(message);
     }
 
     @Test
     void receiveMessages_makes_no_calls_when_no_messages_received() {
         // Arrange
-        Mockito.when(serviceBusReceiverClient.receiveMessages(ArgumentMatchers.anyInt())).thenReturn(new IterableStream<>(List.of()));
+        when(serviceBusReceiverClient.receiveMessages(anyInt())).thenReturn(new IterableStream<>(List.of()));
 
-        Function<ServiceBusReceivedMessage, ProcessingResult> validator = msg ->
-            new ProcessingResult(true, Optional.empty());
+        Function<ServiceBusReceivedMessage, ProcessingResult> processor = msg ->
+            ProcessingResult.successful();
 
         // Act
-        messageReceiverClient.receiveMessages(1, validator);
+        messageReceiverClient.receiveMessages(1, processor);
 
         // Assert
-        Mockito.verify(serviceBusReceiverClient, Mockito.never()).complete(ArgumentMatchers.any());
-        Mockito.verify(serviceBusReceiverClient, Mockito.never()).abandon(ArgumentMatchers.any());
+        verify(serviceBusReceiverClient, never()).complete(any());
+        verify(serviceBusReceiverClient, never()).abandon(any());
     }
 
     @Test
@@ -153,6 +179,6 @@ class MessageReceiverClientTest {
         messageReceiverClient.close();
 
         // Assert
-        Mockito.verify(serviceBusReceiverClient).close();
+        verify(serviceBusReceiverClient).close();
     }
 }

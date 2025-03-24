@@ -27,14 +27,17 @@ public class MessageReceiverClient implements AutoCloseable {
                 if (result.success()) {
                     serviceBusReceiverClient.complete(msg);
                     logger.debug("Message processed and completed: {}", msg.getMessageId());
+                } else if (result.retry().orElse(false)) {
+                    logger.error("Message processing failed, message abandoned: {}", msg.getMessageId());
+                    serviceBusReceiverClient.abandon(msg);
                 } else {
                     serviceBusReceiverClient.deadLetter(msg,
                         new DeadLetterOptions()
                             .setDeadLetterReason(result.errorReason().get()));
-                    logger.error("Message validation failed, message dead lettered: {}", msg.getMessageId());
+                    logger.error("Message processing failed, message dead lettered: {}", msg.getMessageId());
                 }
             } catch (RuntimeException e) {
-                logger.error("Unexpected error validating message: {}", msg.getMessageId(), e);
+                logger.error("Unexpected error processing message: {}", msg.getMessageId(), e);
                 serviceBusReceiverClient.abandon(msg);
             }
         });
