@@ -13,6 +13,7 @@
         <module>wpas-validator</module>
         <module>wpas-hl7-translator</module>
         <module>hl7-sender</module>
+        <module>hl7-mock-receiver</module>
         <module>message-bus-lib</module>
     </modules>
 

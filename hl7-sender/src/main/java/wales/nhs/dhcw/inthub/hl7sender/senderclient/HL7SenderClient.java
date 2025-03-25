@@ -20,20 +20,27 @@ public class HL7SenderClient implements AutoCloseable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HL7SenderClient.class);
 
-    private final Connection connection;
+    private Connection connection;
     private final PipeParser pipeParser;
     private final XMLParser xmlParser;
-    private final Initiator initiator;
+    private final HapiContext context;
+    private final AppConfig config;
 
     public HL7SenderClient(HapiContext context, AppConfig config) throws HL7Exception {
+        this.context = context;
+        this.config = config;
+        pipeParser = context.getPipeParser();
+        xmlParser = context.getXMLParser();
+    }
+
+    private Initiator getClient(HapiContext context, AppConfig config) throws HL7Exception {
+        // This will return the already connected client Connection instance if it exists or new one
         connection = context.newClient(
             config.receiverMllpHost(),
             config.receiverMllpPort(),
             config.useTlsForMLLP()
         );
-        pipeParser = context.getPipeParser();
-        xmlParser = context.getXMLParser();
-        initiator = connection.getInitiator();
+        return connection.getInitiator();
     }
 
     public ProcessingResult sendMessage(String message) {
@@ -53,7 +60,7 @@ public class HL7SenderClient implements AutoCloseable {
 
         Message response;
         try {
-            response = initiator.sendAndReceive(pipeParsedMessage);
+            response = getClient(context, config).sendAndReceive(pipeParsedMessage);
         } catch (HL7Exception | LLPException | IOException e) {
             String error = e.getMessage();
             LOGGER.error(error);
@@ -86,7 +93,9 @@ public class HL7SenderClient implements AutoCloseable {
 
     @Override
     public void close()  {
-        connection.close();
+        if (connection != null) {
+            connection.close();
+        }
     }
 
 }

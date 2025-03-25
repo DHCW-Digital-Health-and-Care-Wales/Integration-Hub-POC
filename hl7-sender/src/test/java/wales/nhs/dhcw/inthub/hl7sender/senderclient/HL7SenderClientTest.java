@@ -74,15 +74,16 @@ class HL7SenderClientTest {
     void setUp() throws Exception {
         context = Mockito.spy(new DefaultHapiContext());
         actualPipeParser = context.getPipeParser();
-        doReturn(connection).when(context).newClient(any(), anyInt(), anyBoolean());
-        when(connection.getInitiator()).thenReturn(initiator);
         when(context.getPipeParser()).thenReturn(pipeParser);
         when(context.getXMLParser()).thenReturn(xmlParser);
     }
 
+
+
     @Test
     void sendMessage_sends_pipe_parsed_message_to_receiver() throws HL7Exception, LLPException, IOException, URISyntaxException, SAXException {
         // Arrange
+        mockConnection();
         String expectedMessage = readFile("ADT_A28.txt");
         ArgumentCaptor<Message> messageCaptor = ArgumentCaptor.forClass(Message.class);
         when(context.getPipeParser()).thenCallRealMethod();
@@ -105,6 +106,7 @@ class HL7SenderClientTest {
     @Test
     void sendMessage_returns_success_response_for_accepted_AA_ACK_response() throws HL7Exception, LLPException, IOException {
         // Arrange
+        mockConnection();
         String ackMessage = """
             MSH|^~\\&|109|7A1|200|200|20250210112501||ADT^A28^ACK|10928038161|P|2.5.1|||AL\r
             MSA|AA|10928038161\r
@@ -123,6 +125,7 @@ class HL7SenderClientTest {
     @Test
     void sendMessage_returns_success_response_for_accepted_CA_ACK_response() throws HL7Exception, LLPException, IOException {
         // Arrange
+        mockConnection();
         String ackMessage = """
             MSH|^~\\&|109|7A1|200|200|20250210112501||ADT^A28^ACK|10928038161|P|2.5.1|||AL\r
             MSA|CA|10928038161\r
@@ -141,6 +144,7 @@ class HL7SenderClientTest {
     @Test
     void sendMessage_returns_failed_response_for_negative_ACK_response() throws HL7Exception, LLPException, IOException {
         // Arrange
+        mockConnection();
         String ackMessage = """
             MSH|^~\\&|109|7A1|200|200|20250210112501||ADT^A28^ACK|10928038161|P|2.5.1|||AL\r
             MSA|AR|12345|Message rejected\r
@@ -159,6 +163,7 @@ class HL7SenderClientTest {
     @Test
     void sendMessage_returns_failed_response_for_unexpected_response() throws HL7Exception, LLPException, IOException {
         // Arrange
+        mockConnection();
         String ackMessage = """
             MSH|^~\\&|109|7A1|200|200|20250210112501||ADT^A28^ADT_A05|10928038161|P|2.5.1|||AL\r
             EVN||20250210112501|||FSA078103|20250210112500\r
@@ -222,6 +227,7 @@ class HL7SenderClientTest {
     @Test
     void sendMessage_returns_failed_response_when_sendAndReceive_throws_HL7Exception() throws HL7Exception, LLPException, IOException {
         // Arrange
+        mockConnection();
         String error = "Send/Receive Error";
         doThrow(new HL7Exception(error)).when(initiator).sendAndReceive(any());
         ProcessingResult expectedResult = ProcessingResult.failed(error, true);
@@ -237,6 +243,7 @@ class HL7SenderClientTest {
     @Test
     void sendMessage_returns_failed_response_when_sendAndReceive_throws_LLPException() throws HL7Exception, LLPException, IOException {
         // Arrange
+        mockConnection();
         String error = "LLP Communication Error";
         doThrow(new LLPException(error)).when(initiator).sendAndReceive(any());
         ProcessingResult expectedResult = ProcessingResult.failed(error, true);
@@ -252,6 +259,7 @@ class HL7SenderClientTest {
     @Test
     void sendMessage_returns_failed_response_when_sendAndReceive_throws_IOException() throws HL7Exception, LLPException, IOException {
         // Arrange
+        mockConnection();
         String error = "IO Error";
         doThrow(new IOException(error)).when(initiator).sendAndReceive(any());
         ProcessingResult expectedResult = ProcessingResult.failed(error, true);
@@ -265,13 +273,25 @@ class HL7SenderClientTest {
     }
 
     @Test
-    void close_hapi_client_closed() throws HL7Exception {
+    void close_connection_closed_when_instantiated() throws HL7Exception {
+        // Act
+        mockConnection();
+        hl7SenderClient = new HL7SenderClient(context, appConfig);
+        hl7SenderClient.sendMessage(SOURCE_MESSAGE);
+        hl7SenderClient.close();
+
+        // Assert
+        verify(connection, times(1)).close();
+    }
+
+    @Test
+    void close_does_nothing_when_connection_not_instantiated() throws HL7Exception {
         // Act
         hl7SenderClient = new HL7SenderClient(context, appConfig);
         hl7SenderClient.close();
 
         // Assert
-        verify(connection, times(1)).close();
+        verify(connection, times(0)).close();
     }
 
     private static String readFile(String fileName) throws IOException, URISyntaxException {
@@ -290,5 +310,10 @@ class HL7SenderClientTest {
         when(initiator.sendAndReceive(any())).thenReturn(response);
         when(context.getPipeParser()).thenCallRealMethod();
         when(context.getXMLParser()).thenCallRealMethod();
+    }
+
+    private void mockConnection() throws HL7Exception {
+        doReturn(connection).when(context).newClient(any(), anyInt(), anyBoolean());
+        when(connection.getInitiator()).thenReturn(initiator);
     }
 }
