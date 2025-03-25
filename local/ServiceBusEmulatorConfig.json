@@ -115,7 +115,54 @@
                   "ForwardTo": "dhcw-integration-hub-poc-docker-sender",
                   "RequiresSession": false
                 }
-              }
+              },
+              {
+                "Name": "dhcw-integration-hub-poc-docker-hl7senders-A40-sub",
+                "Properties": {
+                  "DeadLetteringOnMessageExpiration": false,
+                  "DefaultMessageTimeToLive": "PT1H",
+                  "LockDuration": "PT1M",
+                  "MaxDeliveryCount": 3,
+                  "ForwardDeadLetteredMessagesTo": "",
+                  "ForwardTo": "",
+                  "RequiresSession": false
+                },
+                "Rules": [
+                  {
+                    "Name": "sql-filter-102",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "hl7.messageType = 'ADT^A40'"
+                      }
+                    }
+                  }
+                ]
+
+              },
+              {
+                "Name": "dhcw-inthubpoc-docker-hl7senders-sys102-sub",
+                "Properties": {
+                  "DeadLetteringOnMessageExpiration": false,
+                  "DefaultMessageTimeToLive": "PT1H",
+                  "LockDuration": "PT1M",
+                  "MaxDeliveryCount": 3,
+                  "ForwardDeadLetteredMessagesTo": "",
+                  "ForwardTo": "",
+                  "RequiresSession": false
+                },
+                "Rules": [
+                  {
+                    "Name": "sql-filter-102",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "hl7.sendingApp = '102'"
+                      }
+                    }
+                  }
+                  ]
+                }
             ]
           },
           {
