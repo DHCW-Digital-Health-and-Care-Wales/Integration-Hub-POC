@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.xml.sax.SAXException;
+import wales.nhs.dhcw.inthub.wpasHl7.xml.QueueData;
 
 import java.time.format.DateTimeFormatter;
 
@@ -29,6 +30,7 @@ public class MprToA40MapperTest {
     private DateTimeProvider dateTimeProvider;
     private WpasHl7Translator translator;
     private WpasXmlParser parser;
+    private QueueData queueData;
 
     @BeforeEach
     void setUp() throws JAXBException {
@@ -37,7 +39,7 @@ public class MprToA40MapperTest {
         when(dateTimeProvider.getDateTimeFormatter()).thenReturn(DateTimeFormatter.ofPattern(DATETIME_FORMAT));
         when(dateTimeProvider.getDateyyyyMMddFormatter()).thenReturn(DateTimeFormatter.ofPattern(DATE_YMD_FORMAT));
         when(dateTimeProvider.getDateTimeFormatterWithTFormat()).thenReturn(DateTimeFormatter.ofPattern(DATETIME_WITH_T_FORMAT));
-
+        queueData = new QueueData();
         parser = new WpasXmlParser();
         translator = new WpasHl7Translator(dateTimeProvider);
     }
@@ -47,9 +49,10 @@ public class MprToA40MapperTest {
         // Arrange
         var wpasMessage = parser.parse(TestUtil.getTestFileStream(WPAS_MPI_XML_PATH));
         var expected = TestUtil.getTestFileContent(EXPECTED_A40_PATH);
+        queueData.setMaindata(wpasMessage);
 
         // Act
-        var result = translator.translate(wpasMessage);
+        var result = translator.translate(queueData);
 
         // Assert
         TestUtil.assertMatchingExpectedMessage(expected, result);
