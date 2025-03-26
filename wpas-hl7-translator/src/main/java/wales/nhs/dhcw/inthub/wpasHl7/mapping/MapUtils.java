@@ -1,16 +1,14 @@
 package wales.nhs.dhcw.inthub.wpasHl7.mapping;
 
-import wales.nhs.dhcw.inthub.wpasHl7.mapping.hl7.Hl7DateFormat;
+import wales.nhs.dhcw.inthub.wpasHl7.mapping.hl7.Hl7DateFormatProvider;
 
 import java.time.LocalDate;
 
 public class MapUtils {
 
-    private Hl7DateFormat hl7DateFormat;
     private WpasDateTimeParser wpasDateTimeParser;
 
     public MapUtils() {
-        hl7DateFormat = new Hl7DateFormat();
         wpasDateTimeParser = new WpasDateTimeParser();
     }
 
@@ -18,7 +16,7 @@ public class MapUtils {
         var cleanedDateString = stripEmptyDoubleQuotes(dateString);
         if (notNullNorBlank(cleanedDateString)) {
             LocalDate date = wpasDateTimeParser.parseDate(cleanedDateString);
-            return date.format(hl7DateFormat.getDateFormatter());
+            return date.format(Hl7DateFormatProvider.getDateFormatter());
         } else {
             return dateString;
         }
@@ -27,7 +25,7 @@ public class MapUtils {
     public String mapDateTimeFormat(String dateTimeString) {
         if (notNullNorBlank(dateTimeString)) {
             var date = wpasDateTimeParser.parseDateTime(dateTimeString);
-            return date.format(hl7DateFormat.getDateTimeFormatter());
+            return date.format(Hl7DateFormatProvider.getDateTimeFormatter());
         } else {
             return dateTimeString;
         }
@@ -43,28 +41,5 @@ public class MapUtils {
         } else {
             return input;
         }
-    }
-
-
-    public String readPatientGivenName(String forename) {
-        if (notNullNorBlank(forename)) {
-            var spacePosition = forename.indexOf(' ');
-            if (spacePosition >= 0) {
-                return forename.substring(0, spacePosition);
-            } else {
-                return forename;
-            }
-        }
-        return "";
-    }
-
-    public String readPatientMiddleNames(String forename) {
-        if (notNullNorBlank(forename)) {
-            var spacePosition = forename.indexOf(' ');
-            if (spacePosition >= 0) {
-                return forename.substring(spacePosition);
-            }
-        }
-        return "";
     }
 }

@@ -19,7 +19,6 @@ public class MpiToAdtA28Mapper {
     private final Nk1Mapper nk1Mapper;
 
     public MpiToAdtA28Mapper(DateTimeProvider dateTimeProvider) {
-
         mshMapper = new MshMapper(dateTimeProvider);
         evnMapper = new EvnMapper(dateTimeProvider);
         pidMapper = new PidMapper();
