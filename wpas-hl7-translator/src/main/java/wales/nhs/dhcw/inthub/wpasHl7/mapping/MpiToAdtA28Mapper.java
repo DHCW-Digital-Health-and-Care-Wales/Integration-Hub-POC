@@ -8,7 +8,7 @@ import wales.nhs.dhcw.inthub.wpasHl7.mapping.hl7.MshMapper;
 import wales.nhs.dhcw.inthub.wpasHl7.mapping.hl7.Nk1Mapper;
 import wales.nhs.dhcw.inthub.wpasHl7.mapping.hl7.Pd1Mapper;
 import wales.nhs.dhcw.inthub.wpasHl7.mapping.hl7.PidMapper;
-import wales.nhs.dhcw.inthub.wpasHl7.xml.MAINDATA;
+import wales.nhs.dhcw.inthub.wpasHl7.xml.QueueData;
 
 public class MpiToAdtA28Mapper {
 
@@ -26,15 +26,15 @@ public class MpiToAdtA28Mapper {
         nk1Mapper = new Nk1Mapper();
     }
 
-    public ADT_A05 mapMpiToAdtA28(MAINDATA.TRANSACTION transaction) throws DataTypeException {
+    public ADT_A05 mapMpiToAdtA28(QueueData queueData) throws DataTypeException {
         var a28 = new ADT_A05();
         Hl7MessageTypeData messageTypeData = new Hl7MessageTypeData("ADT", "A28", "ADT_A05");
-        mshMapper.buildMsh(a28.getMSH(), transaction, messageTypeData);
-        evnMapper.buildEvn(a28.getEVN(), transaction);
-        pidMapper.buildPid(a28.getPID(), transaction);
-        pd1Mapper.buildPD1(a28.getPD1(), transaction);
-        nk1Mapper.build1stNK1(a28.getNK1(0), transaction);
-        nk1Mapper.build2ndNK1(a28.getNK1(1), transaction);
+        mshMapper.buildMsh(a28.getMSH(), queueData.getMaindata().getTRANSACTION(), messageTypeData);
+        evnMapper.buildEvn(a28.getEVN(), queueData);
+        pidMapper.buildPid(a28.getPID(), queueData.getMaindata().getTRANSACTION());
+        pd1Mapper.buildPD1(a28.getPD1(), queueData.getMaindata().getTRANSACTION());
+        nk1Mapper.build1stNK1(a28.getNK1(0), queueData.getMaindata().getTRANSACTION());
+        nk1Mapper.build2ndNK1(a28.getNK1(1), queueData.getMaindata().getTRANSACTION());
 
         return a28;
     }
