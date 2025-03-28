@@ -6,6 +6,9 @@ import com.azure.messaging.servicebus.ServiceBusSenderClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
+import java.util.Map;
+
 public class MessageSenderClient implements AutoCloseable {
 
     private static final Logger logger = LoggerFactory.getLogger(MessageSenderClient.class);
@@ -18,13 +21,23 @@ public class MessageSenderClient implements AutoCloseable {
         this.topicName = topicName;
     }
 
-    public void sendMessage(BinaryData message) {
-        serviceBusSenderClient.sendMessage(new ServiceBusMessage(message));
+    public void sendMessage(BinaryData messageData) {
+        sendMessage(messageData, Collections.emptyMap());
+    }
+
+    public void sendMessage(BinaryData messageData,  Map<String, String> customProperties) {
+        ServiceBusMessage message = new ServiceBusMessage(messageData);
+        message.getApplicationProperties().putAll(customProperties);
+        serviceBusSenderClient.sendMessage(message);
         logger.debug("Message sent successfully to topic: {}", topicName);
     }
 
-    public void sendMessage(String message) {
-        sendMessage(BinaryData.fromString(message));
+    public void sendMessage(String messageData) {
+        sendMessage(BinaryData.fromString(messageData));
+    }
+
+    public void sendMessage(String messageData, Map<String, String> customProperties) {
+        sendMessage(BinaryData.fromString(messageData), customProperties);
     }
 
     @Override
