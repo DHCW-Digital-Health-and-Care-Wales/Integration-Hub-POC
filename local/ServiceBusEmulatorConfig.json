@@ -133,7 +133,7 @@
                     "Properties": {
                       "FilterType": "Sql",
                       "SqlFilter": {
-                        "SqlExpression": "hl7.messageType = 'ADT^A40'"
+                        "SqlExpression": "user.hl7MessageType = 'ADT^A40'"
                       }
                     }
                   }
@@ -157,7 +157,7 @@
                     "Properties": {
                       "FilterType": "Sql",
                       "SqlFilter": {
-                        "SqlExpression": "hl7.sendingApp = '102'"
+                        "SqlExpression": "user.hl7SendingApp = '102'"
                       }
                     }
                   }

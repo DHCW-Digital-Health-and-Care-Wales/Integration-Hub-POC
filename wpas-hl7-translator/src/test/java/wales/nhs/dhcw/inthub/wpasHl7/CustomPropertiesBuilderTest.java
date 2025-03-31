@@ -4,6 +4,7 @@ import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.AbstractMessage;
 import ca.uhn.hl7v2.model.v251.message.ADT_A01;
 import ca.uhn.hl7v2.model.v251.message.ADT_A05;
+import ca.uhn.hl7v2.model.v251.message.ADT_A39;
 import ca.uhn.hl7v2.model.v251.segment.MSH;
 import ca.uhn.hl7v2.model.v251.segment.PV1;
 import org.junit.jupiter.api.Test;
@@ -41,17 +42,17 @@ class CustomPropertiesBuilderTest {
     void routingPropertiesAreSetWithoutSpecialty() throws Exception {
         // Arrange
         var messageTypeCode = "ADT";
-        var messageTypeEvent = "A01";
+        var messageTypeEvent = "A40";
         var sendingApplication = "109";
 
-        var hl7Message = new ADT_A05();
+        var hl7Message = new ADT_A39();
         buildHl7Message(hl7Message, messageTypeCode, messageTypeEvent, sendingApplication, null);
 
         // Act
         var result = builder.buildCustomProperties(hl7Message);
 
         // Assert
-        assertEquals("ADT^A01" ,result.get(CustomPropertiesBuilder.MESSAGE_TYPE_PROPERTY));
+        assertEquals("ADT^A40" ,result.get(CustomPropertiesBuilder.MESSAGE_TYPE_PROPERTY));
         assertEquals(sendingApplication, result.get(CustomPropertiesBuilder.SENDING_APPLICATION_PROPERTY));
         assertFalse(result.containsKey(CustomPropertiesBuilder.SPECIALTY_PROPERTY));
     }
