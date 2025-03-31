@@ -4,7 +4,7 @@ import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v251.datatype.XAD;
 import ca.uhn.hl7v2.model.v251.segment.PID;
 import wales.nhs.dhcw.inthub.wpasHl7.mapping.HL7Constants;
-import wales.nhs.dhcw.inthub.wpasHl7.mapping.MapUtils;
+import wales.nhs.dhcw.inthub.wpasHl7.mapping.WpasMapUtils;
 import wales.nhs.dhcw.inthub.wpasHl7.xml.MAINDATA;
 
 public class PidMapper {
@@ -15,10 +15,10 @@ public class PidMapper {
     public static final String PATIENT_IDENTIFIER_TYPE_CODE = "PI";
 
 
-    private final MapUtils utils;
+    private final WpasMapUtils utils;
 
     public PidMapper() {
-        utils = new MapUtils();
+        utils = new WpasMapUtils();
     }
 
     public void buildPid(PID pid, MAINDATA.TRANSACTION transaction) throws DataTypeException {
@@ -74,8 +74,14 @@ public class PidMapper {
         patientAddress.getXad1_StreetAddress().getSad1_StreetOrMailingAddress().setValue(utils.stripEmptyDoubleQuotes(transaction.getADDRESS1()));
         patientAddress.getXad2_OtherDesignation().setValue(utils.stripEmptyDoubleQuotes(transaction.getADDRESS2()));
         patientAddress.getXad3_City().setValue(utils.stripEmptyDoubleQuotes(transaction.getADDRESS3()));
-        if (utils.notNullNorBlank(transaction.getADDRESS4()) && utils.notNullNorBlank(transaction.getADDRESS5())) {
-            patientAddress.getXad4_StateOrProvince().setValue(transaction.getADDRESS4() + "," + transaction.getADDRESS5());
+        if (utils.notNullNorBlank(transaction.getADDRESS4())) {
+            if (utils.notNullNorBlank(transaction.getADDRESS5())) {
+                patientAddress.getXad4_StateOrProvince().setValue(
+                        utils.stripEmptyDoubleQuotes(transaction.getADDRESS4()) + ","
+                        + utils.stripEmptyDoubleQuotes(transaction.getADDRESS5()));
+            } else {
+                patientAddress.getXad4_StateOrProvince().setValue(utils.stripEmptyDoubleQuotes(transaction.getADDRESS4()));
+            }
         }
         patientAddress.getXad5_ZipOrPostalCode().setValue(utils.stripEmptyDoubleQuotes(transaction.getPOSTCODE()));
         patientAddress.getXad7_AddressType().setValue(HL7Constants.ADDRESS_TYPE_HOME);
@@ -91,17 +97,27 @@ public class PidMapper {
         if (utils.notNullNorBlank(transaction.getCONTACTADDRESS4()) && utils.notNullNorBlank(transaction.getCONTACTADDRESS5())) {
             patientAddress2.getXad4_StateOrProvince().setValue(transaction.getCONTACTADDRESS4() + "," + transaction.getCONTACTADDRESS5());
         }
+        if (utils.notNullNorBlank(transaction.getCONTACTADDRESS4())) {
+            if (utils.notNullNorBlank(transaction.getCONTACTADDRESS5())) {
+                patientAddress2.getXad4_StateOrProvince().setValue(
+                        utils.stripEmptyDoubleQuotes(transaction.getCONTACTADDRESS4()) + ","
+                                + utils.stripEmptyDoubleQuotes(transaction.getCONTACTADDRESS5()));
+            } else {
+                patientAddress2.getXad4_StateOrProvince().setValue(utils.stripEmptyDoubleQuotes(transaction.getCONTACTADDRESS4()));
+            }
+        }
         patientAddress2.getXad5_ZipOrPostalCode().setValue(utils.stripEmptyDoubleQuotes(transaction.getCONTACTADDRESS6()));
         patientAddress2.getXad7_AddressType().setValue(HL7Constants.ADDRESS_TYPE_MAILING);
     }
 
-    private void buildMobilePhoneNumber(PID pid, MAINDATA.TRANSACTION transaction) throws DataTypeException {
-        var phoneNumber3 = pid.getPid13_PhoneNumberHome(1);
-        phoneNumber3.getXtn1_TelephoneNumber().setValue(utils.stripEmptyDoubleQuotes(transaction.getMOBILE()));
-        if (utils.notNullNorBlank(transaction.getMOBILE())) {
-            phoneNumber3.getXtn2_TelecommunicationUseCode().setValue(HL7Constants.TELECOM_USE_PERSONAL);
-            phoneNumber3.getXtn3_TelecommunicationEquipmentType().setValue(HL7Constants.TELECOM_EQUPIMENT_CODE_MOBILE);
-            phoneNumber3.getXtn9_AnyText().setValue(HL7Constants.TELECOM_MOBILE);
+    private void buildDayPhoneNumber(PID pid, MAINDATA.TRANSACTION transaction) throws DataTypeException {
+        var phoneNumber1 = pid.getPid13_PhoneNumberHome(0);
+        phoneNumber1.getXtn1_TelephoneNumber().setValue(utils.stripEmptyDoubleQuotes(transaction.getTELEPHONEDAY()));
+        phoneNumber1.getXtn4_EmailAddress().setValue(utils.stripEmptyDoubleQuotes(transaction.getEMAIL()));
+        if (utils.notNullNorBlank(transaction.getTELEPHONEDAY())) {
+            phoneNumber1.getXtn2_TelecommunicationUseCode().setValue(HL7Constants.TELECOM_USE_PRIMARY_RESIDENCE_NUMBER);
+            phoneNumber1.getXtn3_TelecommunicationEquipmentType().setValue(HL7Constants.TELECOM_EQUPIMENT_CODE_PHONE);
+            phoneNumber1.getXtn9_AnyText().setValue(HL7Constants.TELECOM_DAY);
         }
     }
 
@@ -115,14 +131,13 @@ public class PidMapper {
         }
     }
 
-    private void buildDayPhoneNumber(PID pid, MAINDATA.TRANSACTION transaction) throws DataTypeException {
-        var phoneNumber1 = pid.getPid13_PhoneNumberHome(0);
-        phoneNumber1.getXtn1_TelephoneNumber().setValue(utils.stripEmptyDoubleQuotes(transaction.getTELEPHONEDAY()));
-        phoneNumber1.getXtn4_EmailAddress().setValue(utils.stripEmptyDoubleQuotes(transaction.getEMAIL()));
-        if (utils.notNullNorBlank(transaction.getTELEPHONEDAY())) {
-            phoneNumber1.getXtn2_TelecommunicationUseCode().setValue(HL7Constants.TELECOM_USE_PRIMARY_RESIDENCE_NUMBER);
-            phoneNumber1.getXtn3_TelecommunicationEquipmentType().setValue(HL7Constants.TELECOM_EQUPIMENT_CODE_PHONE);
-            phoneNumber1.getXtn9_AnyText().setValue(HL7Constants.TELECOM_DAY);
+    private void buildMobilePhoneNumber(PID pid, MAINDATA.TRANSACTION transaction) throws DataTypeException {
+        var phoneNumber3 = pid.getPid13_PhoneNumberHome(2);
+        phoneNumber3.getXtn1_TelephoneNumber().setValue(utils.stripEmptyDoubleQuotes(transaction.getMOBILE()));
+        if (utils.notNullNorBlank(transaction.getMOBILE())) {
+            phoneNumber3.getXtn2_TelecommunicationUseCode().setValue(HL7Constants.TELECOM_USE_PERSONAL);
+            phoneNumber3.getXtn3_TelecommunicationEquipmentType().setValue(HL7Constants.TELECOM_EQUPIMENT_CODE_MOBILE);
+            phoneNumber3.getXtn9_AnyText().setValue(HL7Constants.TELECOM_MOBILE);
         }
     }
 
@@ -155,7 +170,7 @@ public class PidMapper {
         if (utils.notNullNorBlank(forename)) {
             var spacePosition = forename.indexOf(' ');
             if (spacePosition >= 0) {
-                return forename.substring(spacePosition);
+                return forename.substring(spacePosition + 1);
             }
         }
         return "";

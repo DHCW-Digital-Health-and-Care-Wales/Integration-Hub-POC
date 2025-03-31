@@ -15,10 +15,10 @@ public class HL7Constants {
     public static final String TELECOM_USE_PRIMARY_RESIDENCE_NUMBER = "PRN";
     public static final String TELECOM_EQUPIMENT_CODE_PHONE = "PH";
     public static final String TELECOM_DAY = "DAY";
-    public static final String TELECOM_NIGHT = "Night";
+    public static final String TELECOM_NIGHT = "NIGHT";
     public static final String TELECOM_USE_PERSONAL = "PRS";
     public static final String TELECOM_EQUPIMENT_CODE_MOBILE = "CP";
-    public static final String TELECOM_MOBILE = "Mobile";
+    public static final String TELECOM_MOBILE = "MOBILE";
 
 
 }
