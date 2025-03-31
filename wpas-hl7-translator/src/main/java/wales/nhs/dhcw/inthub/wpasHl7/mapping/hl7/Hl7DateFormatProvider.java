@@ -1,5 +1,6 @@
 package wales.nhs.dhcw.inthub.wpasHl7.mapping.hl7;
 
+import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 
 import static wales.nhs.dhcw.inthub.wpasHl7.mapping.HL7Constants.DATETIME_FORMAT;
@@ -19,5 +20,9 @@ public class Hl7DateFormatProvider {
 
     public static DateTimeFormatter getDateFormatter() {
         return dateFormatter;
+    }
+
+    public static SimpleDateFormat getSimpleDateTimeFormatter() {
+        return  new SimpleDateFormat(DATETIME_FORMAT);
     }
 }

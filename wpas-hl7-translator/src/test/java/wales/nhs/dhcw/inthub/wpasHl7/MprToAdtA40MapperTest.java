@@ -9,10 +9,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.xml.sax.SAXException;
-import wales.nhs.dhcw.inthub.wpasHl7.xml.QueueData;
+import wales.nhs.dhcw.inthub.wpasHl7.xml.WpasData;
 
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 import static org.mockito.Mockito.when;
 
@@ -28,14 +30,14 @@ public class MprToAdtA40MapperTest {
     private DateTimeProvider dateTimeProvider;
     private WpasHl7Translator translator;
     private WpasXmlParser parser;
-    private QueueData queueData;
+    private WpasData queueData;
 
     @BeforeEach
     void setUp() throws JAXBException {
         when(dateTimeProvider.getCurrentDatetime()).thenReturn(DUMMY_TEST_TIME);
 
         parser = new WpasXmlParser();
-        queueData = new QueueData();
+        queueData = new WpasData();
         translator = new WpasHl7Translator(dateTimeProvider);
     }
 
@@ -44,7 +46,7 @@ public class MprToAdtA40MapperTest {
         // Arrange
         var wpasMessage = parser.parse(TestUtil.getTestFileStream(WPAS_MPI_XML_PATH));
         var expected = TestUtil.getTestFileContent(EXPECTED_A40_PATH);
-        OffsetDateTime dateTime = OffsetDateTime.parse(TEST_TIME, DateTimeFormatter.ISO_DATE_TIME);
+        Date dateTime = Date.from(Instant.parse(TEST_TIME));
         queueData.setMaindata(wpasMessage);
         queueData.setQueueDateTime(dateTime);
 

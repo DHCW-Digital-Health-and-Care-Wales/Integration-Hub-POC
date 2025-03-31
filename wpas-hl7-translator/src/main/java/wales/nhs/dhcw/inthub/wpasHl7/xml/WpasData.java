@@ -1,17 +1,17 @@
 package wales.nhs.dhcw.inthub.wpasHl7.xml;
 
 
-import java.time.OffsetDateTime;
+import java.util.Date;
 
-public class QueueData {
+public class WpasData {
     private MAINDATA maindata;
-    private OffsetDateTime queueDateTime;
+    private Date queueDateTime;
 
-    public QueueData(MAINDATA maindata, OffsetDateTime queueDateTime) {
+    public WpasData(MAINDATA maindata, Date queueDateTime) {
         this.maindata = maindata;
         this.queueDateTime = queueDateTime;
     }
-    public QueueData() {}
+    public WpasData() {}
 
     public MAINDATA getMaindata() {
         return maindata;
@@ -21,11 +21,11 @@ public class QueueData {
         this.maindata = maindata;
     }
 
-    public OffsetDateTime getQueueDateTime() {
+    public Date getQueueDateTime() {
         return queueDateTime;
     }
 
-    public void setQueueDateTime(OffsetDateTime queueDateTime) {
+    public void setQueueDateTime(Date queueDateTime) {
         this.queueDateTime = queueDateTime;
     }
 
