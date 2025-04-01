@@ -129,7 +129,7 @@
                 },
                 "Rules": [
                   {
-                    "Name": "sql-filter-102",
+                    "Name": "sql-filter-A40",
                     "Properties": {
                       "FilterType": "Sql",
                       "SqlFilter": {
@@ -153,7 +153,7 @@
                 },
                 "Rules": [
                   {
-                    "Name": "sql-filter-102",
+                    "Name": "sql-filter-sender-102",
                     "Properties": {
                       "FilterType": "Sql",
                       "SqlFilter": {

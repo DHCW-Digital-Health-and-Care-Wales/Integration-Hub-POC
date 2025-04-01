@@ -6,6 +6,7 @@ import ca.uhn.hl7v2.model.v251.segment.MSH;
 import ca.uhn.hl7v2.model.v251.segment.PV1;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class CustomPropertiesBuilder {
@@ -16,7 +17,7 @@ public class CustomPropertiesBuilder {
 
     private static final String PATIENT_VISIT_SEGMENT = "PV1";
 
-    public HashMap<String, String> buildCustomProperties(AbstractMessage hl7Data) throws HL7Exception {
+    public Map<String, String> buildCustomProperties(AbstractMessage hl7Data) throws HL7Exception {
         MSH msh = (MSH) hl7Data.get("MSH");
 
         var customProperties = new HashMap<String, String>();
