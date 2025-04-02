@@ -5,14 +5,14 @@ import ca.uhn.hl7v2.model.v251.datatype.XAD;
 import ca.uhn.hl7v2.model.v251.datatype.XTN;
 import ca.uhn.hl7v2.model.v251.segment.NK1;
 import wales.nhs.dhcw.inthub.wpasHl7.mapping.HL7Constants;
-import wales.nhs.dhcw.inthub.wpasHl7.mapping.MapUtils;
+import wales.nhs.dhcw.inthub.wpasHl7.mapping.WpasMapUtils;
 import wales.nhs.dhcw.inthub.wpasHl7.xml.MAINDATA;
 
 public class Nk1Mapper {
-    private MapUtils utils;
+    private WpasMapUtils utils;
 
     public Nk1Mapper() {
-        utils = new MapUtils();
+        utils = new WpasMapUtils();
     }
 
     public void buildNK1(NK1 nk1, MAINDATA.TRANSACTION transaction, int setId,

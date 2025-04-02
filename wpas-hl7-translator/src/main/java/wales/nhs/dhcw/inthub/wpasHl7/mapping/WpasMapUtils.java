@@ -5,11 +5,11 @@ import wales.nhs.dhcw.inthub.wpasHl7.mapping.hl7.Hl7DateFormatProvider;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
-public class MapUtils {
+public class WpasMapUtils {
 
     private WpasDateTimeParser wpasDateTimeParser;
 
-    public MapUtils() {
+    public WpasMapUtils() {
         wpasDateTimeParser = new WpasDateTimeParser();
     }
 
