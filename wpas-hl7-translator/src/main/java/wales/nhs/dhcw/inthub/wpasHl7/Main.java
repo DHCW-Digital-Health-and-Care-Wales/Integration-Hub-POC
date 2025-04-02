@@ -29,6 +29,7 @@ public final class Main {
         WpasXmlParser parser = new WpasXmlParser();
         WpasHl7Translator translator = new WpasHl7Translator(new DateTimeProvider(Hl7DateFormatProvider.getDateTimeFormatter()));
         Hl7Encoder hl7Encoder = new Hl7Encoder();
+        CustomPropertiesBuilder propertiesBuilder = new CustomPropertiesBuilder();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             LOGGER.info("Shutting down the translator.");
@@ -51,7 +52,8 @@ public final class Main {
                         wpasData = new WpasData(mainData,arrivedTime);
                         var hl7Data = translator.translate(wpasData);
                         var serializedHl7 = hl7Encoder.encode(hl7Data);
-                        senderClient.sendMessage(serializedHl7);
+                        var customProperties = propertiesBuilder.buildCustomProperties(hl7Data);
+                        senderClient.sendMessage(serializedHl7, customProperties);
 
                     } catch (Exception e) {
                         LOGGER.error("WPAS message translation error", e);
@@ -63,5 +65,7 @@ public final class Main {
             }
         }
     }
+
+
 }
 
