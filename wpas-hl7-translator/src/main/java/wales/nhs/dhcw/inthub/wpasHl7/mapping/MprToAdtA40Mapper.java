@@ -8,7 +8,7 @@ import wales.nhs.dhcw.inthub.wpasHl7.mapping.hl7.MgrMapper;
 import wales.nhs.dhcw.inthub.wpasHl7.mapping.hl7.MshMapper;
 import wales.nhs.dhcw.inthub.wpasHl7.mapping.hl7.Pd1Mapper;
 import wales.nhs.dhcw.inthub.wpasHl7.mapping.hl7.PidMapper;
-import wales.nhs.dhcw.inthub.wpasHl7.xml.MAINDATA;
+import wales.nhs.dhcw.inthub.wpasHl7.xml.WpasData;
 
 public class MprToAdtA40Mapper {
     private final ADT_A39 adtMessage;
@@ -28,13 +28,13 @@ public class MprToAdtA40Mapper {
         mgrMapper = new MgrMapper();
     }
 
-    public ADT_A39 mapMprToA40(MAINDATA.TRANSACTION transaction) throws DataTypeException {
+    public ADT_A39 mapMprToA40(WpasData wpasData) throws DataTypeException {
 
-        mshMapper.buildMsh(adtMessage.getMSH(), transaction, getA40TypeData());
-        evnMapper.buildEvn(adtMessage.getEVN(), transaction);
-        pidMapper.buildPid(adtMessage.getPATIENT().getPID(), transaction);
-        pd1Mapper.buildPD1(adtMessage.getPATIENT().getPD1(), transaction);
-        mgrMapper.MRGMapper(adtMessage.getPATIENT().getMRG(), transaction);
+        mshMapper.buildMsh(adtMessage.getMSH(), wpasData.getMaindata().getTRANSACTION(), getA40TypeData());
+        evnMapper.buildEvn(adtMessage.getEVN(), wpasData);
+        pidMapper.buildPid(adtMessage.getPATIENT().getPID(), wpasData.getMaindata().getTRANSACTION());
+        pd1Mapper.buildPD1(adtMessage.getPATIENT().getPD1(), wpasData.getMaindata().getTRANSACTION());
+        mgrMapper.MRGMapper(adtMessage.getPATIENT().getMRG(), wpasData.getMaindata().getTRANSACTION());
         return adtMessage;
     }
 

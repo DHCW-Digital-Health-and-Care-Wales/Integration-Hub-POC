@@ -3,6 +3,7 @@ package wales.nhs.dhcw.inthub.wpasHl7.mapping;
 import wales.nhs.dhcw.inthub.wpasHl7.mapping.hl7.Hl7DateFormatProvider;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 
 public class MapUtils {
 
@@ -29,6 +30,9 @@ public class MapUtils {
         } else {
             return dateTimeString;
         }
+    }
+    public String mapDateTimeFormat(OffsetDateTime dateTime) {
+        return  wpasDateTimeParser.formaterDateTime(dateTime);
     }
 
     public boolean notNullNorBlank(String string) {
