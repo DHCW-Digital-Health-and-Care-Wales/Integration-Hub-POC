@@ -1,7 +1,9 @@
 package wales.nhs.dhcw.inthub.wpasHl7.mapping.hl7;
 
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.TimeZone;
 
 import static wales.nhs.dhcw.inthub.wpasHl7.mapping.HL7Constants.DATETIME_FORMAT;
 import static wales.nhs.dhcw.inthub.wpasHl7.mapping.HL7Constants.DATE_FORMAT;
@@ -23,6 +25,8 @@ public class Hl7DateFormatProvider {
     }
 
     public static SimpleDateFormat getSimpleDateTimeFormatter() {
-        return  new SimpleDateFormat(DATETIME_FORMAT);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATETIME_FORMAT);
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/London")));
+        return simpleDateFormat;
     }
 }
