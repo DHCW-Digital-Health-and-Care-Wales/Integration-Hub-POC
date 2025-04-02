@@ -86,6 +86,8 @@ class HL7SenderClientTest {
         mockConnection();
         String expectedMessage = readFile("ADT_A28.txt");
         ArgumentCaptor<Message> messageCaptor = ArgumentCaptor.forClass(Message.class);
+        when(appConfig.receivingAppId()).thenReturn("201");
+        when(appConfig.receivingFacility()).thenReturn("202");
         when(context.getPipeParser()).thenCallRealMethod();
         when(context.getXMLParser()).thenCallRealMethod();
 

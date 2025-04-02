@@ -7,6 +7,7 @@ import ca.uhn.hl7v2.app.Initiator;
 import ca.uhn.hl7v2.llp.LLPException;
 import ca.uhn.hl7v2.model.Message;
 import ca.uhn.hl7v2.model.v251.message.ACK;
+import ca.uhn.hl7v2.model.v251.segment.MSH;
 import ca.uhn.hl7v2.parser.PipeParser;
 import ca.uhn.hl7v2.parser.XMLParser;
 import org.slf4j.Logger;
@@ -50,6 +51,7 @@ public class HL7SenderClient implements AutoCloseable {
 
         try {
             xmlParsedMessage = xmlParser.parse(message);
+            setReceivingAppIdAndFacility(xmlParsedMessage);
             pipeParsedMessageString = pipeParser.encode(xmlParsedMessage);
             pipeParsedMessage = pipeParser.parse(pipeParsedMessageString);
         } catch (HL7Exception e) {
@@ -68,6 +70,20 @@ public class HL7SenderClient implements AutoCloseable {
         }
 
         return getAckResult(response);
+    }
+
+    private void setReceivingAppIdAndFacility(Message hl7Message) throws HL7Exception {
+        if (null == hl7Message) {
+            return;
+        }
+
+        MSH msh = (MSH) hl7Message.get("MSH");
+        if (null != config.receivingAppId() && !config.receivingAppId().isBlank()) {
+            msh.getMsh5_ReceivingApplication().getHd1_NamespaceID().setValue(config.receivingAppId());
+        }
+        if (null != config.receivingFacility() && !config.receivingFacility().isBlank()) {
+            msh.getMsh6_ReceivingFacility().getHd1_NamespaceID().setValue(config.receivingFacility());
+        }
     }
 
     private static ProcessingResult getAckResult(Message response) {

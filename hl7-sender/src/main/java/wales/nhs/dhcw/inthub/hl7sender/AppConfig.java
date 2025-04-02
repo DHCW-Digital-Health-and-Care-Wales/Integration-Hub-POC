@@ -6,7 +6,9 @@ public record AppConfig(
     String serviceBusNamespace,
     String receiverMllpHost,
     int receiverMllpPort,
-    boolean useTlsForMLLP
+    boolean useTlsForMLLP,
+    String receivingAppId,
+    String receivingFacility
 ) {
 
     public static AppConfig readEnvConfig() {
@@ -16,7 +18,9 @@ public record AppConfig(
             readEnv("SERVICE_BUS_NAMESPACE", false),
             readEnv("RECEIVER_MLLP_HOST", true),
             readIntEnv("RECEIVER_MLLP_PORT", true),
-            readBooleanEnv("USE_TLS_FOR_MLLP", true)
+            readBooleanEnv("USE_TLS_FOR_MLLP", true),
+            readEnv("RECEIVING_APP_ID", false),
+            readEnv("RECEIVING_FACILITY", false)
         );
     }
 
@@ -41,7 +45,5 @@ public record AppConfig(
         String value = readEnv(name, required);
         return Integer.parseInt(value);
     }
-
-
 }
 
