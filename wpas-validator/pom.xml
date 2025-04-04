@@ -14,6 +14,7 @@
 
     <properties>
         <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
+        <mssql-jdbc.version>12.10.0.jre11</mssql-jdbc.version>
     </properties>
 
     <dependencies>
@@ -21,6 +22,12 @@
             <groupId>wales.nhs.dhcw</groupId>
             <artifactId>message-bus-lib</artifactId>
             <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>${mssql-jdbc.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

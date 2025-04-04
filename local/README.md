@@ -12,6 +12,9 @@
     - [Configure Docker to use WSL](https://docs.docker.com/desktop/wsl/#:~:text=Turn%20on%20Docker%20Desktop%20WSL%202%201%20Download,engine%20..%20...%206%20Select%20Apply%20%26%20Restart.)
 - Create a `.secrets` file in `local` folder and add:
     - `MSSQL_SA_PASSWORD="<insert_a_strong_password>"`
+    - `SA_PASSWORD="<insert_a_strong_password>"`
+- Create a `.secrets` file in `wpas-validator` folder and add:
+  - `LOGGING_DB_PASSWORD=="<same SA_PASSWORD from above>"`
     
 ### Windows
 
