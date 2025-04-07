@@ -30,6 +30,25 @@ services:
       ACCEPT_EULA: ${ACCEPT_EULA}
     env_file:
       - ./.secrets
+
+  sqlserver:
+    container_name: sqlserver
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: ${ACCEPT_EULA}
+      MSSQL_PID: Express
+    env_file:
+      - ./.secrets
+    volumes:
+      - ./sql-scripts:/var/opt/mssql/scripts
+    entrypoint: ["/bin/sh", "/var/opt/mssql/scripts/entrypoint.sh"]
+    networks:
+      integration-hub-poc:
+        aliases:
+          - "sqlserver"
+
   wpas-validator:
     container_name: wpas-validator
     build:
@@ -38,6 +57,7 @@ services:
     restart: always
     env_file:
       - ../wpas-validator/.env
+      - ../wpas-validator/.secrets
     depends_on:
       - emulator
     networks:
