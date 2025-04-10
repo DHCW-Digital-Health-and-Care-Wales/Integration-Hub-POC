@@ -21,7 +21,7 @@ class MpaToAdtA31MapperTest {
     private static final String WPAS_MPI_XML_PATH = "wpas-mpa.xml";
     private static final String EXPECTED_A28_PATH = "wpas-adt_a31.hl7.xml";
     private static final String DUMMY_TEST_TIME = "20250210145216";
-    private static final String TEST_TIME = "2025-03-26T12:22:27Z";
+    private static final String TEST_TIME = "2025-02-10T14:52:16Z";
 
     @Mock
     private DateTimeProvider dateTimeProvider;
@@ -50,6 +50,6 @@ class MpaToAdtA31MapperTest {
         var result = translator.translate(wpasData);
 
         // Assert
-        TestUtil.assertMatchingExpectedMessage(expected, result);
+        HL7Assertions.assertMatchingExpectedMessage(expected, result);
     }
 }
