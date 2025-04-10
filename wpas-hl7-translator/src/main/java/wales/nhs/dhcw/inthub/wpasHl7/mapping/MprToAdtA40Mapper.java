@@ -29,8 +29,8 @@ public class MprToAdtA40Mapper {
     }
 
     public ADT_A39 mapMprToA40(WpasData wpasData) throws DataTypeException {
-
-        mshMapper.buildMsh(adtMessage.getMSH(), wpasData.getMaindata().getTRANSACTION(), getA40TypeData());
+        var transaction = wpasData.getMaindata().getTRANSACTION();
+        mshMapper.buildMsh(adtMessage.getMSH(), transaction, getA40TypeData(), transaction.getDHACODE());
         evnMapper.buildEvn(adtMessage.getEVN(), wpasData);
         pidMapper.buildPid(adtMessage.getPATIENT().getPID(), wpasData.getMaindata().getTRANSACTION());
         pd1Mapper.buildPD1(adtMessage.getPATIENT().getPD1(), wpasData.getMaindata().getTRANSACTION());

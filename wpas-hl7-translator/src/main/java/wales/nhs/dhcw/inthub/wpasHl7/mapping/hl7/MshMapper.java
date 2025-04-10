@@ -15,11 +15,11 @@ public class MshMapper {
         this.dateTimeProvider = dateTimeProvider;
     }
 
-    public void buildMsh(MSH msh, MAINDATA.TRANSACTION transaction, Hl7MessageTypeData hl7MessageTypeData) throws DataTypeException {
+    public void buildMsh(MSH msh, MAINDATA.TRANSACTION transaction, Hl7MessageTypeData hl7MessageTypeData, String sendingFacility) throws DataTypeException {
         msh.getFieldSeparator().setValue(HL7Constants.PIPE_LINE);
         msh.getEncodingCharacters().setValue(HL7Constants.ENCODING_CHAR);
         msh.getMsh3_SendingApplication().getNamespaceID().setValue(transaction.getSYSTEMID());
-        msh.getMsh4_SendingFacility().getNamespaceID().setValue(transaction.getDHACODE());
+        msh.getMsh4_SendingFacility().getNamespaceID().setValue(sendingFacility);
         msh.getMsh7_DateTimeOfMessage().getTs1_Time().setValue(dateTimeProvider.getCurrentDatetime());
         msh.getMsh9_MessageType().getMsg1_MessageCode().setValue(hl7MessageTypeData.messageTypeCode());
         msh.getMsh9_MessageType().getMsg2_TriggerEvent().setValue(hl7MessageTypeData.triggerEvent());
