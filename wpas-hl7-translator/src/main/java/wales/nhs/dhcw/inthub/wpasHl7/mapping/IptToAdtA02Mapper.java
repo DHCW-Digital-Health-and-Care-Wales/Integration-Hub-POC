@@ -32,13 +32,14 @@ public class IptToAdtA02Mapper {
     public ADT_A02 mapIptToAdtA02(WpasData wpasData) throws DataTypeException {
         var a02 = new ADT_A02();
         var transaction = wpasData.getMaindata().getTRANSACTION();
-        Hl7MessageTypeData messageTypeData = new Hl7MessageTypeData("ADT", "A02", "ADT_A02");
-        mshMapper.buildMsh(a02.getMSH(), transaction, messageTypeData, transaction.getCURLOCPROVIDERCODE());
+        var messageTypeData = new Hl7MessageTypeData("ADT", "A02", "ADT_A02");
+        var sendingFacility = transaction.getCURLOCPROVIDERCODE();
+        mshMapper.buildMsh(a02.getMSH(), transaction, messageTypeData, sendingFacility);
         evnMapper.buildEvn(a02.getEVN(), wpasData);
-        pidMapper.buildPid(a02.getPID(), wpasData.getMaindata().getTRANSACTION());
-        pd1Mapper.buildPD1(a02.getPD1(), wpasData.getMaindata().getTRANSACTION());
-        pv1Mapper.buildPV1(a02.getPV1(), wpasData.getMaindata().getTRANSACTION());
-        pv2Mapper.buildPV2(a02.getPV2(), wpasData.getMaindata().getTRANSACTION());
+        pidMapper.buildPid(a02.getPID(), transaction);
+        pd1Mapper.buildPD1(a02.getPD1(), transaction);
+        pv1Mapper.buildPV1(a02.getPV1(), transaction, PatientVisitType.INPATIENT);
+        pv2Mapper.buildPV2(a02.getPV2(), transaction);
         return a02;
     }
 }

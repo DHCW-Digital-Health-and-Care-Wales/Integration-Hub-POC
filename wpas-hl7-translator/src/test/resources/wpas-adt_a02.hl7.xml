@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ADT_A02 xmlns:ns3="urn:hl7-org:v2xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ADT_A02 xmlns="urn:hl7-org:v2xml">
     <MSH>
         <MSH.1>|</MSH.1>
         <MSH.2>^~\&amp;</MSH.2>
@@ -9,12 +9,6 @@
         <MSH.4>
             <HD.1>7A6G9</HD.1>
         </MSH.4>
-        <MSH.5>
-            <HD.1>200</HD.1>
-        </MSH.5>
-        <MSH.6>
-            <HD.1>200</HD.1>
-        </MSH.6>
         <MSH.7>
             <TS.1>20250403163027</TS.1>
         </MSH.7>
@@ -39,9 +33,6 @@
         <EVN.5>
             <XCN.1>GEN_051366</XCN.1>
         </EVN.5>
-        <EVN.6>
-            <TS.1/>
-        </EVN.6>
     </EVN>
     <PID>
         <PID.1>1</PID.1>
@@ -136,19 +127,17 @@
         </PID.33>
     </PID>
     <PD1>
-        <PD1>
-            <PD1.3>
-                <XON.1>ST. PAUL'S CLINIC</XON.1>
-                <XON.10>W93039</XON.10>
-            </PD1.3>
-            <PD1.4>
-                <XCN.1>G7601965</XCN.1>
-                <XCN.2>
-                    <FN.1>POOLED</FN.1>
-                </XCN.2>
-                <XCN.3>LIST</XCN.3>
-            </PD1.4>
-        </PD1>
+        <PD1.3>
+            <XON.1>ST. PAUL'S CLINIC</XON.1>
+            <XON.10>W93039</XON.10>
+        </PD1.3>
+        <PD1.4>
+            <XCN.1>G7601965</XCN.1>
+            <XCN.2>
+                <FN.1>POOLED</FN.1>
+            </XCN.2>
+            <XCN.3>LIST</XCN.3>
+        </PD1.4>
     </PD1>
     <PV1>
         <PV1.1>1</PV1.1>

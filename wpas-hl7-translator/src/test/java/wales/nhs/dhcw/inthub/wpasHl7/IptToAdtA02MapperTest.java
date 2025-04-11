@@ -20,7 +20,7 @@ class IptToAdtA02MapperTest {
 
     private static final String WPAS_IPT_XML_PATH = "wpas-ipt.xml";
     private static final String EXPECTED_A02_PATH = "wpas-adt_a02.hl7.xml";
-    private static final String DUMMY_TEST_TIME = "20250210145216";
+    private static final String DUMMY_TEST_TIME = "20250403163027";
     private static final String TEST_TIME = "2025-03-26T12:22:27Z";
 
     @Mock
@@ -40,10 +40,7 @@ class IptToAdtA02MapperTest {
     void WpasIptMessage_Is_translatedToAdtA02() throws HL7Exception, JAXBException, SAXException {
         // Arrange
         var wpasMessage = parser.parse(TestUtil.getTestFileStream(WPAS_IPT_XML_PATH));
-        Date dateTime = Date.from(Instant.parse(TEST_TIME));
-        var wpasData = new WpasData();
-        wpasData.setMaindata(wpasMessage);
-        wpasData.setQueueDateTime(dateTime);
+        var wpasData = new WpasData(wpasMessage, null);
         var expected = TestUtil.getTestFileContent(EXPECTED_A02_PATH);
 
         // Act
