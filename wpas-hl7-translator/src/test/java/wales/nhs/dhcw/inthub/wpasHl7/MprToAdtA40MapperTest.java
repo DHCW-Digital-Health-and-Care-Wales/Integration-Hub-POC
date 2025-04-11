@@ -12,8 +12,6 @@ import org.xml.sax.SAXException;
 import wales.nhs.dhcw.inthub.wpasHl7.xml.WpasData;
 
 import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import static org.mockito.Mockito.when;
@@ -54,7 +52,7 @@ public class MprToAdtA40MapperTest {
         var result = translator.translate(queueData);
 
         // Assert
-        TestUtil.assertMatchingExpectedMessage(expected, result);
+        HL7Assertions.assertMatchingExpectedMessage(expected, result);
     }
 
 }
