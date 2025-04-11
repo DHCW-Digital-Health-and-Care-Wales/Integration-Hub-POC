@@ -11,8 +11,6 @@ import org.xml.sax.SAXException;
 import wales.nhs.dhcw.inthub.wpasHl7.xml.WpasData;
 
 import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import static org.mockito.Mockito.when;
@@ -20,39 +18,58 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class MpiToAdtA28MapperTest {
 
-    private static final String WPAS_MPI_XML_PATH = "wpas-mpi.xml";
-    private static final String EXPECTED_A28_PATH = "wpas-adt_a28.hl7.xml";
-    private static final String DUMMY_TEST_TIME = "20000101010101";
-    private static final String TEST_TIME = "2025-03-26T12:22:27Z";
 
     @Mock
     private DateTimeProvider dateTimeProvider;
     private WpasHl7Translator translator;
     private WpasXmlParser parser;
-    private WpasData queueData;
 
     @BeforeEach
     void setUp() throws JAXBException {
-        when(dateTimeProvider.getCurrentDatetime()).thenReturn(DUMMY_TEST_TIME);
-
         parser = new WpasXmlParser();
-        queueData = new WpasData();
         translator = new WpasHl7Translator(dateTimeProvider);
     }
 
     @Test
     void WpasMpiMessage_Is_translatedToAdtA28() throws HL7Exception, JAXBException, SAXException {
         // Arrange
-        var wpasMessage = parser.parse(TestUtil.getTestFileStream(WPAS_MPI_XML_PATH));
-        var expected = TestUtil.getTestFileContent(EXPECTED_A28_PATH);
-        Date dateTime = Date.from(Instant.parse(TEST_TIME));
-        queueData.setMaindata(wpasMessage);
-        queueData.setQueueDateTime(dateTime);
+        String wpasXmlMessagePath = "wpas-mpi.xml";
+        String msmqTime = "2025-02-10T11:25:00Z";
+        String testTime = "20250210112501";
+        String expectedA28Path = "wpas-adt_a28.hl7.xml";
+
+        when(dateTimeProvider.getCurrentDatetime()).thenReturn(testTime);
+        var wpasMessage = parser.parse(TestUtil.getTestFileStream(wpasXmlMessagePath));
+        Date dateTime = Date.from(Instant.parse(msmqTime));
+        var wpasData = new WpasData(wpasMessage, dateTime);
+        var expected = TestUtil.getTestFileContent(expectedA28Path);
 
         // Act
-        var result = translator.translate(queueData);
+        var result = translator.translate(wpasData);
 
         // Assert
-        TestUtil.assertMatchingExpectedMessage(expected, result);
+        HL7Assertions.assertMatchingExpectedMessage(expected, result);
+    }
+
+    @Test
+    void WpasMpiMessage_Is_translatedToAdtA28WithNk1() throws HL7Exception, JAXBException, SAXException {
+        // Arrange
+        String wpasXmlMessagePath = "wpas-mpi-A28-withNK1.xml";
+        var testTime = "20250318172221";
+        String msmqTime = "2025-03-18T17:22:20Z";
+        String expectedHl7Path = "wpas-adt_a28-with_NK1.hl7.xml";
+
+        var wpasMessage = parser.parse(TestUtil.getTestFileStream(wpasXmlMessagePath));
+        when(dateTimeProvider.getCurrentDatetime()).thenReturn(testTime);
+        Date msmqDateTime = Date.from(Instant.parse(msmqTime));
+        var wpasData = new WpasData(wpasMessage, msmqDateTime);
+        var expected = TestUtil.getTestFileContent(expectedHl7Path);
+
+
+        // Act
+        var result = translator.translate(wpasData);
+
+        // Assert
+        HL7Assertions.assertMatchingExpectedMessage(expected, result);
     }
 }
