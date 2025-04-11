@@ -29,4 +29,14 @@ public class Hl7DateFormatProvider {
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/London")));
         return simpleDateFormat;
     }
+
+    public static String getFormatDateTime(String dateTime) {
+        try {
+            SimpleDateFormat requiredFormat = new SimpleDateFormat("yyyy-MM-ddHHmm");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATETIME_FORMAT);
+            return simpleDateFormat.format(requiredFormat.parse(dateTime));
+        } catch (Exception e) {
+            return "";
+        }
+    }
 }

@@ -6,6 +6,7 @@ public class HL7Constants {
     public static final String ENCODING_CHAR = "^~\\&";
     public static final String ADT = "ADT";
     public static final String A40 = "A40";
+    public static final String A01 = "A01";
 
     public static final String DATETIME_FORMAT = "yyyyMMddHHmmss";
     public static final String DATE_FORMAT = "yyyyMMdd";
