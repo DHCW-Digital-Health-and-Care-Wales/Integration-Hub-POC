@@ -15,7 +15,7 @@ public final class TestUtil {
     }
 
     static InputStream getTestFileStream(String path) {
-        return WpasXmlParserTest.class.getClassLoader().getResourceAsStream(path);
+        return TestUtil.class.getClassLoader().getResourceAsStream(path);
     }
 
     static String getTestFileContent(String path) {
