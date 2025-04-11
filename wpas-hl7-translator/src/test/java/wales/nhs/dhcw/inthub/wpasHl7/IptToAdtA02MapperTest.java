@@ -47,6 +47,6 @@ class IptToAdtA02MapperTest {
         var result = translator.translate(wpasData);
 
         // Assert
-        TestUtil.assertMatchingExpectedMessage(expected, result);
+        HL7Assertions.assertMatchingExpectedMessage(expected, result);
     }
 }
