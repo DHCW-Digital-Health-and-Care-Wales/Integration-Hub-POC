@@ -15,12 +15,11 @@ public class MshMapper {
         this.dateTimeProvider = dateTimeProvider;
     }
 
-    public void buildMsh(MSH msh, MAINDATA.TRANSACTION transaction, Hl7MessageTypeData hl7MessageTypeData) throws DataTypeException {
+    public void buildMsh(MSH msh, MAINDATA.TRANSACTION transaction, Hl7MessageTypeData hl7MessageTypeData, String sendingFacility) throws DataTypeException {
         msh.getFieldSeparator().setValue(HL7Constants.PIPE_LINE);
         msh.getEncodingCharacters().setValue(HL7Constants.ENCODING_CHAR);
         msh.getMsh3_SendingApplication().getNamespaceID().setValue(transaction.getSYSTEMID());
-//        msh.getMsh4_SendingFacility().getNamespaceID().setValue(transaction.getDHACODE());
-        setMsh4_SendingFacility(msh, transaction);
+        msh.getMsh4_SendingFacility().getNamespaceID().setValue(sendingFacility);
         msh.getMsh7_DateTimeOfMessage().getTs1_Time().setValue(dateTimeProvider.getCurrentDatetime());
         msh.getMsh9_MessageType().getMsg1_MessageCode().setValue(hl7MessageTypeData.messageTypeCode());
         msh.getMsh9_MessageType().getMsg2_TriggerEvent().setValue(hl7MessageTypeData.triggerEvent());
@@ -29,13 +28,5 @@ public class MshMapper {
         msh.getMsh11_ProcessingID().getPt1_ProcessingID().setValue("P");
         msh.getMsh12_VersionID().getVersionID().setValue(WpasHl7Translator.HL7_VERSION);
         msh.getMsh15_AcceptAcknowledgmentType().setValue("AL");
-    }
-
-    private void setMsh4_SendingFacility(MSH msh, MAINDATA.TRANSACTION transaction) throws DataTypeException {
-        if (transaction.getMSGID().equals("IPI")) {
-            msh.getMsh4_SendingFacility().getNamespaceID().setValue(transaction.getCURLOCPROVIDERCODE());
-        }else{
-            msh.getMsh4_SendingFacility().getNamespaceID().setValue(transaction.getDHACODE());
-        }
     }
 }

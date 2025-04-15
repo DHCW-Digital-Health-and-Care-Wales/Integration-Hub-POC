@@ -3,6 +3,7 @@ package wales.nhs.dhcw.inthub.wpasHl7.mapping.hl7;
 import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v251.datatype.CX;
 import ca.uhn.hl7v2.model.v251.segment.PV1;
+import wales.nhs.dhcw.inthub.wpasHl7.mapping.PatientVisitType;
 import wales.nhs.dhcw.inthub.wpasHl7.mapping.WpasMapUtils;
 import wales.nhs.dhcw.inthub.wpasHl7.xml.MAINDATA;
 
@@ -14,9 +15,9 @@ public class Pv1Mapper {
         utils = new WpasMapUtils();
     }
 
-    public void buildPV1(PV1 pv1, MAINDATA.TRANSACTION transaction) throws DataTypeException {
+    public void buildPV1(PV1 pv1, MAINDATA.TRANSACTION transaction, PatientVisitType visitType) throws DataTypeException {
         pv1.getPv11_SetIDPV1().setValue("1");
-        pv1.getPv12_PatientClass().setValue(""); // Need to figure out how to map
+        pv1.getPv12_PatientClass().setValue(visitType.getCode());
 
         pv1.getPv13_AssignedPatientLocation().getPl1_PointOfCare().setValue(transaction.getWARD());
         pv1.getPv13_AssignedPatientLocation().getPl4_Facility().getHd1_NamespaceID().setValue(transaction.getCURLOCPROVIDERCODE());

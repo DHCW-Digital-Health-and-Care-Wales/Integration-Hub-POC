@@ -37,13 +37,14 @@ public class IpiToAdtA01Mapper {
 
     public ADT_A01 mapIpiToAdtA01(WpasData wpasData) throws DataTypeException {
         var a01 = new ADT_A01();
-        mshMapper.buildMsh(a01.getMSH(), wpasData.getMaindata().getTRANSACTION(), getA01TypeData());
+        mshMapper.buildMsh(a01.getMSH(), wpasData.getMaindata().getTRANSACTION(), getA01TypeData(),
+                wpasData.getMaindata().getTRANSACTION().getCURLOCPROVIDERCODE());
         evnMapper.buildEvn(a01.getEVN(), wpasData);
         pidMapper.buildPid(a01.getPID(), wpasData.getMaindata().getTRANSACTION());
         pd1Mapper.buildPD1(a01.getPD1(), wpasData.getMaindata().getTRANSACTION());
         nk1Mapper.build1stNK1(a01.getNK1(0), wpasData.getMaindata().getTRANSACTION());
         nk1Mapper.build2ndNK1(a01.getNK1(1), wpasData.getMaindata().getTRANSACTION());
-        pv1Mapper.buildPV1(a01.getPV1(), wpasData.getMaindata().getTRANSACTION());
+        pv1Mapper.buildPV1(a01.getPV1(), wpasData.getMaindata().getTRANSACTION(), PatientVisitType.INPATIENT);
         pv2Mapper.buildPV2(a01.getPV2(), wpasData.getMaindata().getTRANSACTION());
 
         return a01;
