@@ -24,8 +24,9 @@ public class MpaToAdtA31Mapper {
 
     public ADT_A05 mapMpaToAdtA31(WpasData wpasData) throws DataTypeException {
         var a28 = new ADT_A05();
+        var transaction = wpasData.getMaindata().getTRANSACTION();
         Hl7MessageTypeData messageTypeData = new Hl7MessageTypeData("ADT", "A31", "ADT_A05");
-        mshMapper.buildMsh(a28.getMSH(), wpasData.getMaindata().getTRANSACTION(), messageTypeData);
+        mshMapper.buildMsh(a28.getMSH(), transaction, messageTypeData, transaction.getDHACODE());
         evnMapper.buildEvn(a28.getEVN(), wpasData);
         pidMapper.buildPid(a28.getPID(), wpasData.getMaindata().getTRANSACTION());
         pd1Mapper.buildPD1(a28.getPD1(), wpasData.getMaindata().getTRANSACTION());
