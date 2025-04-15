@@ -180,7 +180,7 @@
         <ns3:PV1.10>300000</ns3:PV1.10>
         <ns3:PV1.14>19</ns3:PV1.14>
         <ns3:PV1.17>
-            <ns3:XCN.1>""</ns3:XCN.1>
+            <ns3:XCN.1>C6144118</ns3:XCN.1>
             <ns3:XCN.2>
                 <ns3:FN.1>Kalhar Koonara</ns3:FN.1>
             </ns3:XCN.2>
@@ -195,9 +195,6 @@
             <ns3:CX.5>VN</ns3:CX.5>
         </ns3:PV1.19>
         <ns3:PV1.36>""</ns3:PV1.36>
-        <ns3:PV1.37>
-            <ns3:DLD.1>""</ns3:DLD.1>
-        </ns3:PV1.37>
         <ns3:PV1.44>
             <ns3:TS.1>20250403010000</ns3:TS.1>
         </ns3:PV1.44>
@@ -214,6 +211,5 @@
             <ns3:CE.2>Emergency - Emergency Department</ns3:CE.2>
         </ns3:PV2.3>
         <ns3:PV2.12>General Medicine</ns3:PV2.12>
-        <ns3:PV2.24>""</ns3:PV2.24>
     </ns3:PV2>
 </ns3:ADT_A02>
